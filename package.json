@@ -1,21 +1,12 @@
 {
-    "name": "NUGraph",
-    "version": "0.0.1",
-    "description": "Nutonian Graphing Library based on d3.js",
-    "main": "index.html",
-    "directories": {
-        "test": "tests"
-    },
-    "scripts": {
-        "test": "checkin_test"
-    },
-    "author": "Nutonian, Inc.",
-    "devDependencies": {
-        "grunt": "0.4.5",
-        "grunt-contrib-jshint": "0.10.0",
-        "grunt-contrib-watch": "0.6.1",
-        "lodash": "2.4.0",
-        "grunt-contrib-jasmine": "0.8.1",
-        "grunt-istanbul": "0.4.0"
-    }
+  "name": "Nugget",
+  "version": "0.0.1",
+  "description": "Nutonian General Graphing Extension Tool",
+  "main": "index.html",
+  "author": "Nutonian, Inc.",
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-contrib-jshint": "0.11.1",
+    "grunt-contrib-watch": "0.6.1"
+  }
 }

@@ -1,10 +1,10 @@
-var _ = require('lodash');
-
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
+            all: ['lib/**/*.js', 'test/**/*.js', 'example/**/*.js', '!lib/dependencies/*.js'],
             options: {
+                esnext: true,
                 curly: true,
                 eqeqeq: true,
                 immed: true,
@@ -18,62 +18,19 @@ module.exports = function(grunt) {
                 node: false,
                 browser: true,
                 devel: true,
-                jquery: true,
-                unused: 'vars',
-                globals: {
-                    _: true,
-                    require: false,
-                    define: false,
-                    describe: false,
-                    expect: false,
-                    it: false,
-                    beforeEach: false,
-                    afterEach: false,
-                    afterAll: false,
-                    waitsFor: false,
-                    runs: false,
-                    spyOn: false,
-                    jasmine: false
-                }
-            },
-            all: {
-                src: [
-                    '<%= dirs.js %>/**/*.js',
-                    '<%= dirs.tests %>/**/*.js',
-                    '!<%= dirs.js %>/libs/**/*.js',
-                    '!<%= dirs.js %>/require.js',
-                    '!<%= dirs.js %>/templates/templates.js',
-                    '!<%= dirs.js %>/app.min.js'
-                ]
+                unused: 'vars'
             }
         },
         watch: {
             javascript: {
-                files: '<%= jshint.all.src %>',
+                files: ['lib/**/*.js', 'test/**/*.js', 'example/**/*.js'],
                 tasks: ['jshint']
-            },
-            handlebars: {
-                files: ['<%= dirs.templates %>/**/*.{hbs,svg}'],
-                tasks: ['handlebars']
-            },
-            sass: {
-                files: '<%= dirs.sass %>/**/*.scss',
-                tasks: ['sass', 'generateColorsEnum']
-            }
-        },
-        jasmine: {
-            src: [],
-            options: {
-                specs: '<%= dirs.jasmine %>/specs/**/*.spec.js',
-                template: require('grunt-template-jasmine-requirejs')
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-istanbul');
-    grunt.loadNpmTasks('grunt-template');
+
+    grunt.registerTask('default', ['jshint']);
 };
