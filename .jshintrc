@@ -4,8 +4,11 @@
     "describe",
     "expect",
     "it",
+    "beforeEach",
+    "afterEach",
     "module",
-    "require"
+    "require",
+    "spyOn"
   ],
   "boss": true,
   "browser": true,
