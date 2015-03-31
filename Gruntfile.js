@@ -1,36 +1,95 @@
 module.exports = function(grunt) {
+
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*', '!grunt-template-jasmine-requirejs']
+    });
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        jshint: {
-            all: ['lib/**/*.js', 'test/**/*.js', 'example/**/*.js', '!lib/dependencies/*.js'],
+
+        dirs: {
+            lib      : 'lib/**/*.js',
+            test     : 'test/',
+            examples : 'example/**/*.js',
+            nuggetJS : [
+                'Gruntfile.js',
+                '<%= dirs.lib %>',
+                '<%= dirs.test %>'
+            ]
+        },
+
+        babel: {
             options: {
-                esnext: true,
-                curly: true,
-                eqeqeq: true,
-                immed: true,
-                latedef: true,
-                newcap: false,
-                noarg: true,
-                sub: true,
-                undef: true,
-                boss: true,
-                eqnull: true,
-                node: false,
-                browser: true,
-                devel: true,
-                unused: 'vars'
+                sourceMap: true,
+                modules: 'umd'
+            },
+            dist: {
+                files: [{
+                    'expand' : true,
+                    'cwd'    : 'lib/',
+                    'src'    : ['**/*.js'],
+                    'dest'   : 'release/'
+                }]
             }
         },
+
+        clean: ['release'],
+
+        connect: {
+            server: {
+                options: {
+                    base: '.',
+                    hostname: '*',
+                    port: 9999,
+                    keepalive: true
+                }
+            }
+        },
+
+        jasmine: {
+            taskName: {
+                src: 'release/Nugget.js',
+                options: {
+                    specs: '<%= dirs.test %>/*.spec.js',
+                    template: require('grunt-template-jasmine-requirejs'),
+                    templateOptions: {
+                        requireConfig: {
+                            baseUrl: 'release/'
+                        }
+                    }
+                }
+            }
+        },
+
+        jshint: {
+            all: '<%= dirs.nuggetJS %>',
+            options: {
+                jshintrc: '.jshintrc'
+            }
+        },
+
+        /*
+            Note: Requirejs release stuff is currently busted
+         */
+        requirejs: {
+            compile: {
+                options: {
+                    name: 'Nugget',
+                    baseUrl: 'release/',
+                    optimize: 'none',
+                    out: 'release/Nugget.release.js'
+                }
+            }
+        },
+
         watch: {
             javascript: {
-                files: ['lib/**/*.js', 'test/**/*.js', 'example/**/*.js'],
-                tasks: ['jshint']
+                files: '<%= dirs.nuggetJS %>',
+                tasks: ['clean', 'babel', 'jshint']
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.registerTask('default', ['jshint', 'clean', 'babel', /*'requirejs'*/]);
 
-    grunt.registerTask('default', ['jshint']);
 };

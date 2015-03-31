@@ -1,0 +1,25 @@
+{
+  "predef": [
+    "define",
+    "describe",
+    "expect",
+    "it",
+    "module",
+    "require"
+  ],
+  "boss": true,
+  "browser": true,
+  "curly": true,
+  "devel": true,
+  "esnext": true,
+  "eqeqeq": true,
+  "eqnull": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": false,
+  "noarg": true,
+  "node": false,
+  "sub": true,
+  "undef": true,
+  "unused": "vars"
+}

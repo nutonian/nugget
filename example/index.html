@@ -2,8 +2,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Nugget.js Graphing Library</title>
+    <script src="require.min.js"></script>
 </head>
 <body>
+    <h1>Nugget</h1>
+    <p>Check the console...</p>
+    <script>
+        require.config({
+            baseUrl: '/release/'
+        });
 
+        require(['Nugget'], function (Nugget) {
+            console.log('Hi, I\'m Nugget:', Nugget);
+        });
+    </script>
 </body>
 </html>
