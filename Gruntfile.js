@@ -51,14 +51,14 @@ module.exports = function(grunt) {
         },
 
         jasmine: {
-            taskName: {
-                src: '<%= dirs.release %>/Nugget.js',
+            dist: {
+                src: '<%= dirs.build %>/Nugget.js',
                 options: {
                     specs: '<%= dirs.test %>/*.spec.js',
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfig: {
-                            baseUrl: 'release/'
+                            baseUrl: 'build/'
                         }
                     }
                 }
@@ -97,8 +97,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('build', ['jshint', 'clean', 'babel', 'requirejs']);
     grunt.registerTask('development', ['build', 'connect', 'watch']);
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('tests',       ['jasmine:dist:build']);
+    grunt.registerTask('build',       ['jshint', 'clean', 'babel', 'requirejs']);
+    grunt.registerTask('default',     ['build']);
 
 };
