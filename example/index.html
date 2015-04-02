@@ -9,11 +9,16 @@
     <p>Check the console...</p>
     <script>
         require.config({
-            baseUrl: '/release/'
+            // Development
+            baseUrl: '/build'
+
+            // Production
+            // baseUrl: '/release/'
         });
 
         require(['Nugget'], function (Nugget) {
             console.log('Hi, I\'m Nugget:', Nugget);
+            window.Nugget = Nugget;
         });
     </script>
 </body>
