@@ -19,9 +19,9 @@ require(['Nugget'], function (Nugget) {
 
     // range functions
     var xRange = d3.scale.linear().range([margins.left, width - margins.right])
-                .domain([d3.min(lineData, function(d) {
+                .domain([d3.min(secondLineData, function(d) {
                     return d.x;
-                }), d3.max(lineData, function(d) {
+                }), d3.max(secondLineData, function(d) {
                     return d.x;
                 })]);
     var yRange = d3.scale.linear().range([height - margins.top, margins.bottom])
@@ -64,12 +64,12 @@ require(['Nugget'], function (Nugget) {
     graph.append('svg:path')
          .attr('d', lineFunc(lineData))
          .attr('stroke', '#09e')
-         .attr('strokeWidth', 2)
+         .attr('stroke-width', 2)
          .attr('fill', 'transparent');
 
     graph.append('svg:path')
          .attr('d', lineFunc(secondLineData))
          .attr('stroke', 'green')
-         .attr('strokeWidth', 2)
+         .attr('stroke-width', 2)
          .attr('fill', 'transparent');
 });
