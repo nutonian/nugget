@@ -4,10 +4,25 @@
     <title>Nugget.js Graphing Library</title>
     <script src="/dependencies/d3.js"></script>
     <script src="require.min.js"></script>
+    <script src="js/example.js" type="text/javascript"></script>
+    <style type="text/css" media="screen">
+        body {
+            font-family: arial, sans-serif;
+            font-size: 14px;
+        }
+        .domain {
+            fill: none;
+            stroke: #bbb;
+            stroke-width: 1px;
+        }
+    </style>
 </head>
 <body>
     <h1>Nugget</h1>
-    <p>Check the console...</p>
+    <h4>Line Graph Example, Pure d3</h4>
+    <svg id="line_graph" width="900" height="500"></svg>
+    <h4>Line Graph Example, Pure Nugget</h4>
+    <svg id="line_graph_nugget" width="900" height="500"></svg>
     <script>
         require.config({
             // Development
@@ -15,11 +30,6 @@
 
             // Production
             // baseUrl: '/release/'
-        });
-
-        require(['Nugget'], function (Nugget) {
-            console.log('Hi, I\'m Nugget:', Nugget);
-            window.Nugget = Nugget;
         });
     </script>
 </body>
