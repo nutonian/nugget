@@ -8,13 +8,15 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         dirs: {
-            lib      : 'lib/**/*.js',
-            test     : 'test/',
             examples : 'example/**/*.js',
+            lib      : 'lib/',
+            build    : 'build/',
+            release  : 'release/',
+            test     : 'test/',
             nuggetJS : [
                 'Gruntfile.js',
-                '<%= dirs.lib %>',
-                '<%= dirs.test %>'
+                '<%= dirs.lib %>/**/*.js',
+                '<%= dirs.test %>/**/*.js'
             ]
         },
 
@@ -26,29 +28,31 @@ module.exports = function(grunt) {
             dist: {
                 files: [{
                     'expand' : true,
-                    'cwd'    : 'lib/',
+                    'cwd'    : '<%= dirs.lib %>',
                     'src'    : ['**/*.js'],
-                    'dest'   : 'release/'
+                    'dest'   : '<%= dirs.build %>'
                 }]
             }
         },
 
-        clean: ['release'],
+        clean: {
+            build: ['build'],
+            release: ['release']
+        },
 
         connect: {
             server: {
                 options: {
                     base: '.',
                     hostname: '*',
-                    port: 9999,
-                    keepalive: true
+                    port: 9999
                 }
             }
         },
 
         jasmine: {
             taskName: {
-                src: 'release/Nugget.js',
+                src: '<%= dirs.release %>/Nugget.js',
                 options: {
                     specs: '<%= dirs.test %>/*.spec.js',
                     template: require('grunt-template-jasmine-requirejs'),
@@ -68,16 +72,16 @@ module.exports = function(grunt) {
             }
         },
 
-        /*
-            Note: Requirejs release stuff is currently busted
-         */
         requirejs: {
             compile: {
                 options: {
                     name: 'Nugget',
-                    baseUrl: 'release/',
+                    baseUrl: '<%= dirs.build %>',
                     optimize: 'none',
-                    out: 'release/Nugget.release.js'
+                    out: '<%= dirs.release %>/Nugget.js',
+                    wrap: {
+                        start: '// Nugget version <%= pkg.version %> by Nutonian Inc.\n\n',
+                    }
                 }
             }
         },
@@ -85,11 +89,16 @@ module.exports = function(grunt) {
         watch: {
             javascript: {
                 files: '<%= dirs.nuggetJS %>',
-                tasks: ['clean', 'babel', 'jshint']
+                tasks: ['clean:build', 'babel', 'jshint'],
+                options: {
+                    atBegin: true
+                }
             }
         }
     });
 
-    grunt.registerTask('default', ['jshint', 'clean', 'babel', /*'requirejs'*/]);
+    grunt.registerTask('build', ['jshint', 'clean', 'babel', 'requirejs']);
+    grunt.registerTask('development', ['build', 'connect', 'watch']);
+    grunt.registerTask('default', ['build']);
 
 };
