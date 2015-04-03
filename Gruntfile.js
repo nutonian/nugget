@@ -16,7 +16,7 @@ module.exports = function(grunt) {
             nuggetJS : [
                 'Gruntfile.js',
                 '<%= dirs.lib %>/**/*.js',
-                '<%= dirs.test %>/**/*.js'
+                '<%= dirs.test %>/**/*.spec.js'
             ]
         },
 
