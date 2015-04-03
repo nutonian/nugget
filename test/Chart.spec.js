@@ -1,5 +1,7 @@
 define(['Nugget'], function(Nugget) {
     describe('Chart Tests', function() {
+
+        /*
         var chart;
         beforeEach(function() {
             chart = new Nugget.Chart({
@@ -61,5 +63,7 @@ define(['Nugget'], function(Nugget) {
 
             expect(line._drawElement).toHaveBeenCalled();
         });
+        */
+
     });
 });
