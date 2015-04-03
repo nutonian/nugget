@@ -1,11 +1,12 @@
 {
   "predef": [
+    "afterEach",
+    "beforeEach",
+    "d3",
     "define",
     "describe",
     "expect",
     "it",
-    "beforeEach",
-    "afterEach",
     "module",
     "require",
     "spyOn"
