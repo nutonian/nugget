@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         watch: {
             javascript: {
                 files: '<%= dirs.nuggetJS %>',
-                tasks: ['clean:build', 'babel', 'jshint'],
+                tasks: ['clean:build', 'babel', 'addPolyfill', 'jshint'],
                 options: {
                     atBegin: true
                 }
@@ -97,9 +97,16 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('addPolyfill', function() {
+        var fs = require('fs');
+        var polyfillPath = './node_modules/grunt-babel/node_modules/babel-core/browser-polyfill.js';
+        var polyfill = '\r' + fs.readFileSync(polyfillPath, {encoding: 'utf8'});
+        fs.appendFileSync('./build/Nugget.js', polyfill, {encoding: 'utf8'});
+    });
+
     grunt.registerTask('development', ['build', 'connect', 'watch']);
     grunt.registerTask('tests',       ['jasmine:dist:build']);
-    grunt.registerTask('build',       ['jshint', 'clean', 'babel', 'requirejs']);
+    grunt.registerTask('build',       ['jshint', 'clean', 'babel', 'addPolyfill', 'requirejs']);
     grunt.registerTask('default',     ['build']);
 
 };
