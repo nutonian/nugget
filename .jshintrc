@@ -1,5 +1,6 @@
 {
   "predef": [
+    "$",
     "afterEach",
     "beforeEach",
     "d3",
