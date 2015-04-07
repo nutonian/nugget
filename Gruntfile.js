@@ -54,7 +54,7 @@ module.exports = function(grunt) {
             dist: {
                 src: '<%= dirs.build %>/Nugget.js',
                 options: {
-                    specs: '<%= dirs.test %>/*.spec.js',
+                    specs: '<%= dirs.test %>/**/*.spec.js',
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfig: {
