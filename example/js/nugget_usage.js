@@ -6,13 +6,9 @@ require(['Nugget'], function (Nugget) {
     var data2 = new Nugget.DataSeries(secondLineData);
 
     var chart = new Nugget.Chart({
-        width: 900,
-        height: 500,
-        margins: {
-            top: 20,
-            bottom: 20,
-            left: 100,
-            right: 20
+        axisLabels: {
+            x: 'row',
+            y: 'value'
         }
     });
 
@@ -31,19 +27,19 @@ require(['Nugget'], function (Nugget) {
 
     chart.appendTo('#line_graph_nugget');
 
-    line1.setTransition([
-        ['duration', function() { return 400; }],
-        ['ease', 'back']
-    ]);
+    // line1.setTransition([
+    //     ['duration', function() { return 400; }],
+    //     ['ease', 'back']
+    // ]);
 
-    setInterval(function() {
-        var data = data1.data;
-        var newData = data.map(function(coords) {
-            return {
-                x: coords.x,
-                y: Math.abs( coords.y + (Math.random() < 0.5 ? 5000000 : -5000000) )
-            }
-        });
-        data1.setData(newData);
-    }, 500);
+    // setInterval(function() {
+    //     var data = data1.data;
+    //     var newData = data.map(function(coords) {
+    //         return {
+    //             x: coords.x,
+    //             y: Math.abs( coords.y + (Math.random() < 0.5 ? 5000000 : -5000000) )
+    //         }
+    //     });
+    //     data1.setData(newData);
+    // }, 500);
 });
