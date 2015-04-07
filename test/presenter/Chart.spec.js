@@ -1,6 +1,6 @@
 define([
     'Nugget',
-    '../../dependencies/d3'
+    '../../../dependencies/d3'
 ],
 function (
     Nugget,

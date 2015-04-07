@@ -31,14 +31,19 @@ require(['Nugget'], function (Nugget) {
 
     chart.appendTo('#line_graph_nugget');
 
+    line1.setTransition([
+        ['duration', function() { return 400; }],
+        ['ease', 'back']
+    ]);
+
     setInterval(function() {
         var data = data1.data;
         var newData = data.map(function(coords) {
             return {
                 x: coords.x,
-                y: Math.abs( coords.y + (Math.random() < 0.5 ? 1000000 : -1000000) )
+                y: Math.abs( coords.y + (Math.random() < 0.5 ? 5000000 : -5000000) )
             }
         });
         data1.setData(newData);
-    }, 100);
+    }, 500);
 });
