@@ -1,0 +1,170 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            font-family: arial, sans-serif;
+            font-size: 14px;
+        }
+        .domain {
+            fill: none;
+            stroke: #bbb;
+            stroke-width: 1px;
+        }
+        .tick line {
+            stroke-width: 1;
+            stroke: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Backbone/Layout Manager</h1>
+    <div id="main"></div>
+    <script>
+        require.config({
+            // Development
+            baseUrl: '/build',
+            paths: {
+                'backbone'                  : '/example/js/backbone',
+                'underscore'                : '/example/js/underscore',
+                'jquery'                    : '/example/js/jquery',
+                'layoutmanager'             : '/example/js/backbone.layoutmanager'
+            },
+            shim: {
+                'backbone': {
+                    deps: ['underscore', 'jquery'],
+                    exports: 'Backbone'
+                },
+                'underscore': {
+                    exports: '_'
+                }
+            },
+            deps: [
+                'backbone',
+                'layoutmanager'
+            ],
+            callback: function() {
+                Backbone.Layout.configure({
+                    manage : true,
+                    useRAF : false
+                });
+            }
+        });
+    </script>
+
+    <script>
+        require([
+            'Nugget',
+            'backbone',
+            'underscore',
+            'layoutmanager'
+        ], function (
+                Nugget,
+                Backbone,
+                _,
+                LayoutManager
+        ) {
+
+            var layout = new Backbone.Layout({
+                el: '#main'
+            });
+
+            var testModel = new Backbone.Model({
+                data_series: [
+                    {x: 0, y: 0},
+                    {x: 1, y: 1},
+                    {x: 2, y: 2},
+                    {x: 3, y: 1},
+                    {x: 4, y: 0},
+                    {x: 5, y: 1},
+                    {x: 6, y: 2}
+                ]
+            });
+
+            var TestView = Backbone.View.extend({
+                initialize: function (options) {
+                    this.model = options.model;
+
+                    var data = this.model.get('data_series');
+                    this.dataSeries = new Nugget.DataSeries(data);
+
+                    this.listenTo(this.model, 'change', this.onModelChange);
+
+                    this.chart = this.initChart();
+                },
+
+                initChart: function() {
+                    var chart = this.chart = new Nugget.Chart({
+                        width: 900,
+                        height: 500,
+                        margins: {
+                            top: 20,
+                            bottom: 20,
+                            left: 100,
+                            right: 20
+                        }
+                    });
+                    var color = d3.scale.category20();
+                    var lineGraph = this.lineGraph = new Nugget.LineGraph({
+                        dataSeries: this.dataSeries,
+                        color: 'green',
+                        transition: [
+                            ['attrTween', 'stroke', function(a, b, currentColor) {
+                                return d3.interpolate(currentColor, color(Math.random() * 10));
+                            }],
+                            ['duration', 1000]
+                        ]
+                    });
+                    chart.add(lineGraph);
+                    return chart;
+                },
+
+                template: function() {
+                    return '<svg id="svg" width="900" height="500"></svg>';
+                },
+
+                events: {
+                    'click': 'onClick'
+                },
+
+                counter: 0,
+
+                onClick: function(e) {
+                    this.counter++;
+
+                    // Testing out some change events
+                    if (this.counter < 3) {
+                        var data = this.dataSeries.getData();
+                        data.forEach(function (d) {
+                            d.y = 2 * Math.random();
+                        });
+                        this.dataSeries.setData(data);
+                    }
+                    // Testing out persistence across renders
+                    else {
+                        this.counter = 0;
+                        this.render();
+                        alert('I just rendered!');
+                    }
+                },
+
+                onModelChange: function(model) {
+                    this.dataSeries.setData(model.get('data_series'));
+                },
+
+                afterRender: function() {
+                    this.chart.appendTo(this.$('svg')[0]);
+                }
+            });
+
+            layout.insertView('', new TestView({
+                model: testModel
+            })).render();
+
+        });
+    </script>
+</body>
+</html>
