@@ -26,6 +26,4 @@ require(['Nugget'], function (Nugget) {
     chart.add(line2);
 
     chart.appendTo('#line_graph_nugget');
-
-    chart.remove(line1);
 });
