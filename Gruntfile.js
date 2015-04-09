@@ -104,7 +104,7 @@ module.exports = function(grunt) {
         fs.appendFileSync('./build/Nugget.js', polyfill, {encoding: 'utf8'});
     });
 
-    grunt.registerTask('development', ['build', 'connect', 'watch']);
+    grunt.registerTask('development', ['build', 'tests', 'connect', 'watch']);
     grunt.registerTask('tests',       ['jasmine:dist:build']);
     grunt.registerTask('build',       ['jshint', 'clean', 'babel', 'addPolyfill', 'requirejs']);
     grunt.registerTask('default',     ['build']);
