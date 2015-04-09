@@ -72,7 +72,13 @@
                 el: '#main'
             });
 
-            var testModel = new Backbone.Model({
+            var TestModel = Backbone.Model.extend({
+                setData: function(data) {
+                    this.set('data_series', data);
+                    this.trigger('change');
+                }
+            });
+            var testModel = new TestModel({
                 data_series: [
                     {x: 0, y: 0},
                     {x: 1, y: 1},
@@ -137,11 +143,11 @@
 
                     // Testing out some change events
                     if (this.counter < 3) {
-                        var data = this.dataSeries.getData();
+                        var data = this.model.toJSON().data_series;
                         data.forEach(function (d) {
                             d.y = 2 * Math.random();
                         });
-                        this.dataSeries.setData(data);
+                        this.model.setData(data);
                     }
                     // Testing out persistence across renders
                     else {
@@ -151,8 +157,8 @@
                     }
                 },
 
-                onModelChange: function(model) {
-                    this.dataSeries.setData(model.get('data_series'));
+                onModelChange: function() {
+                    this.dataSeries.setData(this.model.get('data_series'));
                 },
 
                 afterRender: function() {
