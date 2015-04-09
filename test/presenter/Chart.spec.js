@@ -44,6 +44,7 @@ function (
 
         afterEach(function() {
             svg.parentElement.removeChild(svg);
+
         });
 
         it('should render a LineGraph with options', function () {
@@ -101,6 +102,52 @@ function (
             chart.appendTo('#foo');
             expect(d3Svg).toBe(chart._d3Svg);
         });
+        it('should remove a child element and then reset itself', function() {
+            var chart = new Nugget.Chart({
+                width: 900,
+                height: 500,
+                margins: {
+                    top: 20,
+                    bottom: 20,
+                    left: 100,
+                    right: 20
+                },
+                axisLabels: {
+                    x: 'row',
+                    y: 'value'
+                }
+            });
 
+            var line1 = new Nugget.LineGraph({
+                dataSeries: dataSeries1,
+                color: 'green'
+            });
+            var line2 = new Nugget.LineGraph({
+                dataSeries: dataSeries2,
+                color: '#09e'
+            });
+            chart.add(line1);
+            chart.add(line2);
+
+            chart.appendTo('#foo');
+
+            var renderedHtml = document.querySelectorAll('.drawing_surface')[0];
+
+            var paths = renderedHtml.getElementsByTagName('path');
+
+            var elementMap = chart._childElementMap.size;
+            expect(elementMap).toBe(2);
+
+            expect(paths.length).toBe(2);
+
+            chart.remove(line1);
+
+            var newMap = chart._childElementMap.size;
+
+            expect(newMap).toBe(1);
+
+            expect(line1.path).toBeUndefined();
+
+        });
     });
 });
