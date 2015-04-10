@@ -101,7 +101,7 @@ module.exports = function(grunt) {
         watch: {
             javascript: {
                 files: '<%= dirs.nuggetJS %>',
-                tasks: ['clean:build', 'babel', 'addPolyfill', 'jshint'],
+                tasks: ['clean:build', 'babel', 'addPolyfill', 'jshint', 'requirejs'],
                 options: {
                     atBegin: true
                 }

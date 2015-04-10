@@ -53,7 +53,7 @@
     require(['Nugget'], function (Nugget) {
         var data = [{x_low: 1, x_high: 3, y: 20}, {x_low: 3, x_high: 4, y: 10}, {x_low: 4, x_high: 9, y: 30}];
 
-        var rangeseries = new Nugget.RangeSeries(data);
+        var rangeseries = new Nugget.RangeDataSeries(data);
         var chart = new Nugget.Chart();
         var bars = new Nugget.Histogram({
             dataSeries: rangeseries,

@@ -22,7 +22,7 @@ function (
         });
 
         it('should render a scatter graph', function() {
-            var dataSeries = new Nugget.DataSeries(data);
+            var dataSeries = new Nugget.NumericalDataSeries(data);
 
             var chart = new Nugget.Chart();
 
