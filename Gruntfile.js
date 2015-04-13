@@ -8,11 +8,13 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         dirs: {
-            examples : 'example/**/*.js',
-            lib      : 'lib/',
-            build    : 'build/',
-            release  : 'release/',
-            test     : 'test/',
+            examples     : 'example/**/*.js',
+            lib          : 'lib',
+            build        : 'build',
+            dependencies : 'dependencies',
+            release      : 'release',
+            test         : 'test',
+            wrappers     : 'wrappers',
             nuggetJS : [
                 'Gruntfile.js',
                 '<%= dirs.lib %>/**/*.js',
@@ -23,7 +25,7 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: true,
-                modules: 'umd'
+                modules: 'amd'
             },
             dist: {
                 files: [{
@@ -75,12 +77,22 @@ module.exports = function(grunt) {
         requirejs: {
             compile: {
                 options: {
-                    name: 'Nugget',
-                    baseUrl: '<%= dirs.build %>',
-                    optimize: 'none',
+                    baseUrl: '.',
+                    name: '<%= dirs.dependencies %>/almond',
+                    include: ['<%= dirs.build %>/Nugget'],
+                    optimize: 'uglify2',
+                    // Mainly using uglify to strip out comments/source maps
+                    uglify2: {
+                        output: {
+                            beautify: true
+                        },
+                        warnings: false,
+                        mangle: false
+                    },
                     out: '<%= dirs.release %>/Nugget.js',
                     wrap: {
-                        start: '// Nugget version <%= pkg.version %> by Nutonian Inc.\n\n',
+                        startFile: 'wrappers/start.frag.js',
+                        endFile: 'wrappers/end.frag.js'
                     }
                 }
             }
