@@ -1,0 +1,69 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            font-family: arial, sans-serif;
+            font-size: 14px;
+        }
+        .domain {
+            fill: none;
+            stroke: #878787;
+            stroke-width: 1px;
+        }
+        .tick text {
+            fill: #878787;
+        }
+        .tick line {
+            stroke-width: 1;
+            stroke: #878787;
+        }
+        .bounding_box {
+            stroke-width: 1;
+            stroke: #878787;
+            fill: none;
+        }
+        .axis_label {
+            font-size: 1.2em;
+            fill: #696969;
+        }
+        .foo {
+            width: 100%;
+            height: 50em;
+        }
+    </style>
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Histogram in Nugget</h4>
+<div class="foo">
+    <svg id="histogram_nugget"></svg>
+</div>
+<script>
+    require.config({
+        // Development
+        baseUrl: '/build'
+
+        // Production
+        // baseUrl: '/release/'
+    });
+    require(['Nugget'], function (Nugget) {
+        var data = [{x_low: 1, x_high: 3, y: 20}, {x_low: 3, x_high: 4, y: 10}, {x_low: 4, x_high: 9, y: 30}];
+
+        var rangeseries = new Nugget.RangeSeries(data);
+        var chart = new Nugget.Chart();
+        var bars = new Nugget.Histogram({
+            dataSeries: rangeseries,
+            color: 'green'
+        });
+
+        chart.add(bars);
+
+        chart.appendTo('#histogram_nugget');
+    });
+</script>
+</body>
+</html>
