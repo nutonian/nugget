@@ -1,0 +1,71 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            font-family: arial, sans-serif;
+            font-size: 14px;
+        }
+        .domain {
+            fill: none;
+            stroke: #878787;
+            stroke-width: 1px;
+        }
+        .tick text {
+            fill: #878787;
+        }
+        .tick line {
+            stroke-width: 1;
+            stroke: #878787;
+        }
+        .bounding_box {
+            stroke-width: 1;
+            stroke: #878787;
+            fill: none;
+        }
+        .axis_label {
+            font-size: 1.2em;
+            fill: #696969;
+        }
+        .foo {
+            width: 100%;
+            height: 50em;
+        }
+    </style>
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Bar graph in Nugget</h4>
+<div class="foo">
+    <svg id="bar_graph_nugget"></svg>
+</div>
+<script>
+    require.config({
+        // Development
+        baseUrl: '/build'
+
+        // Production
+        // baseUrl: '/release/'
+    });
+
+    require(['Nugget'], function (Nugget) {
+        var data = [{x: 'A', y: 2}, {x: 'B', y: 15}, {x: 'C', y: 8}, {x: 'D', y: 6}, {x: 'E', y: 20}, {x: 'F', y: 16}];
+
+        var dataSeries = new Nugget.OrdinalDataSeries(data);
+
+        var chart = new Nugget.Chart();
+
+        var bars = new Nugget.BarGraph({
+            dataSeries: dataSeries,
+            color: '#09e'
+        });
+
+        chart.add(bars);
+        chart.appendTo('#bar_graph_nugget');
+    });
+</script>
+</body>
+</html>
