@@ -21,7 +21,7 @@ function (
 
         });
         it('should render a histogram', function() {
-            var dataseries = new Nugget.RangeSeries(data);
+            var dataseries = new Nugget.RangeDataSeries(data);
 
             var chart = new Nugget.Chart();
             var bars = new Nugget.Histogram({

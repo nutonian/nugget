@@ -11,7 +11,7 @@ define([
             var graph;
 
             beforeEach(function() {
-                dataSeries = new Nugget.DataSeries([
+                dataSeries = new Nugget.NumericalDataSeries([
                     {x: 0, y: 1},
                     {x: 1, y: 2},
                     {x: 2, y: 3}

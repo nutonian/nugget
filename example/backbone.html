@@ -95,7 +95,7 @@
                     this.model = options.model;
 
                     var data = this.model.get('data_series');
-                    this.dataSeries = new Nugget.DataSeries(data);
+                    this.dataSeries = new Nugget.NumericalDataSeries(data);
 
                     this.listenTo(this.model, 'change', this.onModelChange);
 
