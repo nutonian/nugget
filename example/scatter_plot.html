@@ -59,7 +59,12 @@
 
         var scatter = new Nugget.ScatterGraph({
             dataSeries: dataSeries,
-            color: '#09e'
+            color: '#09e',
+            inserts: function(selection) {
+                selection.attr('data-tooltip', function(d) {
+                    return `X: ${d.x}, Y: ${d.y}`;
+                });
+            }
         });
 
         chart.add(scatter);

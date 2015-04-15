@@ -3,56 +3,33 @@ define([
         '../../../dependencies/d3'
     ],
     function (
-        Nugget
+        Nugget,
+        d3
     ) {
-        describe('Graph Tests', function () {
-
-            var dataSeries;
-            var graph;
-
-            beforeEach(function() {
-                dataSeries = new Nugget.NumericalDataSeries([
-                    {x: 0, y: 1},
-                    {x: 1, y: 2},
-                    {x: 2, y: 3}
-                ]);
-                graph = new Nugget.Graph({
-                    dataSeries: dataSeries
+        describe('Graph', function () {
+            function checkIfImplemented(fn, text) {
+                return (fn.toString().indexOf(fn.name + '() must be implemented') === -1) ? true : false;
+            }
+            function checkContains(fn, text) {
+                return (fn.toString().indexOf(text) > -1) ? true : false;
+            }
+            function addCheck(NuggetModule, name) {
+                describe(name, function() {
+                    it('should implement all required Graph methods and calls', function() {
+                        var proto = NuggetModule.prototype;
+                        expect(checkIfImplemented(proto.drawElement)).toBe(true);
+                        expect(checkIfImplemented(proto.update)).toBe(true);
+                        expect(checkIfImplemented(proto.remove)).toBe(true);
+                        expect(checkContains(proto.draw, '_applyInserts')).toBe(true);
+                    });
                 });
-            });
-
-            afterEach(function() {
-                graph = null;
-            });
-
-            it('should optionally add transitions', function () {
-                // No transition by default
-                var el = document.createElement('div');
-                var d3El = d3.select(el);
-                expect(graph.applyTransition(d3El)).toEqual(d3El);
-
-                // Set some transition items
-                var delay = 1;
-                function getDelay() { return delay; }
-
-                var duration = 5;
-                function getDuration() { return duration; }
-
-                graph.setTransition([
-                    ['delay', getDelay],
-                    ['duration', getDuration]
-                ]);
-
-                var res = graph.applyTransition(d3El);
-                expect(res.delay()).toBe(delay);
-                expect(res.duration()).toBe(duration);
-
-                // Remove transitions
-                graph.setTransition(null);
-                res = graph.applyTransition(d3El);
-                expect(res.delay).toBeUndefined();
-                expect(res.duration).toBeUndefined();
-            });
+            }
+            for (var name in Nugget) {
+                var NuggetModule = Nugget[name];
+                if (Nugget.Graph.isPrototypeOf(NuggetModule)) {
+                    addCheck(NuggetModule, name);
+                }
+            }
 
         });
     });
