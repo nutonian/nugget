@@ -84,10 +84,12 @@
 
         chart.appendTo('#line_graph_nugget');
 
-        line1.setTransition([
-             ['duration', function() { return 400; }],
-             ['ease', 'back']
-        ]);
+        line1.update = function() {
+            this.el.transition()
+                .duration(400)
+                .ease('back')
+                .attr('d', this.getData());
+        };
 
         setInterval(function() {
              var data = data1.data;

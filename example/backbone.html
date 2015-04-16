@@ -116,14 +116,16 @@
                     var color = d3.scale.category20();
                     var lineGraph = this.lineGraph = new Nugget.LineGraph({
                         dataSeries: this.dataSeries,
-                        color: 'green',
-                        transition: [
-                            ['attrTween', 'stroke', function(a, b, currentColor) {
-                                return d3.interpolate(currentColor, color(Math.random() * 10));
-                            }],
-                            ['duration', 1000]
-                        ]
+                        color: 'green'
                     });
+                    lineGraph.update = function() {
+                        this.el.transition()
+                                 .attrTween('stroke', function(a, b, currentColor) {
+                                    return d3.interpolate(currentColor, color(Math.random() * 10));
+                                })
+                                .duration(1000)
+                                .attr('d', this.getData())
+                    };
                     chart.add(lineGraph);
                     return chart;
                 },
@@ -153,7 +155,7 @@
                     else {
                         this.counter = 0;
                         this.render();
-                        alert('I just rendered!');
+                        console.log('I just rendered!');
                     }
                 },
 
