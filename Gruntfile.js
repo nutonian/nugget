@@ -57,6 +57,7 @@ module.exports = function(grunt) {
                 src: '<%= dirs.build %>/Nugget.js',
                 options: {
                     specs: '<%= dirs.test %>/**/*.spec.js',
+                    helpers: '<%= dirs.test %>/helpers/*.js',
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfig: {
@@ -99,12 +100,16 @@ module.exports = function(grunt) {
         },
 
         watch: {
-            javascript: {
-                files: '<%= dirs.nuggetJS %>',
-                tasks: ['clean:build', 'babel', 'addPolyfill', 'jshint', 'requirejs'],
+            lib: {
+                files: '<%= dirs.lib %>/**/*.js',
+                tasks: ['clean:build', 'babel', 'addPolyfill', 'requirejs'],
                 options: {
                     atBegin: true
                 }
+            },
+            javascript: {
+                files: '<%= dirs.nuggetJS %>',
+                tasks: ['jshint']
             }
         }
     });

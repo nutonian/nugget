@@ -9,7 +9,7 @@ function (
     describe('Box Plot Tests', function () {
         var data = [
             {
-                x: '0',
+                x_value: '0',
                 y_min: 1,
                 y_25pct: 25,
                 y_50pct: 50,
@@ -17,7 +17,7 @@ function (
                 y_max: 99
             },
             {
-                x: '1',
+                x_value: '1',
                 y_min: 10,
                 y_25pct: 30,
                 y_50pct: 50,
