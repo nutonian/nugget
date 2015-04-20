@@ -34,6 +34,11 @@
             width: 100%;
             height: 50em;
         }
+        .slope {
+            stroke-width: 1;
+            stroke: purple;
+            fill: transparent;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +72,15 @@
             }
         });
 
+        var trend = new Nugget.TrendLine({
+            dataSeries: dataSeries,
+            color: 'yellow',
+            slope: 1
+        });
+
+        chart.add(trend);
         chart.add(scatter);
+
         chart.appendTo('#scatter_graph_nugget');
     });
 </script>

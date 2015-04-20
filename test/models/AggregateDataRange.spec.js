@@ -64,7 +64,7 @@ function (
             aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: 30,   y: 40   }]) );
             aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: xMax, y: yMax }]) );
 
-            var scales = aggregateDataRange.getScales();
+            var scales = aggregateDataRange.getScales(30, 50);
             expect(scales.x.domain()).toEqual([xMin, xMax]);
             expect(scales.y.domain()).toEqual([yMin, yMax]);
         });
