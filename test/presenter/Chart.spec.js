@@ -1,3 +1,4 @@
+/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -204,6 +205,132 @@ function (
                 expect(yAxisLabel.innerHTML).toBe('64');
             });
         });
+
+        describe('All platform tests', function() {
+            describe('Box zoom', function() {
+                var chart;
+                var container;
+
+                beforeEach(function() {
+                    chart = new Nugget.Chart({
+                        width: 900,
+                        height: 500
+                    });
+                    chart.add(line);
+                    chart.appendTo('#container');
+                    container = $('#container')[0];
+                });
+
+                it('should be on by default', function() {
+                    expect(chart.boxZoom).toBe(true);
+                });
+
+                it('should correctly draw on drag and remove on mouseup', function() {
+                    Utils.trigger(container, 'mousedown');
+                    Utils.trigger(container, 'mousemove');
+
+                    expect($('.zoom_box').length).toBe(1);
+
+                    Utils.trigger(container, 'mouseup');
+
+                    expect($('.zoom_box').length).toBe(0);
+                });
+
+                it('should zoom axes appropriately', function() {
+                    function getDomains() {
+                        var numDecimalPlaces = 3;
+                        var domains = {
+                            x: chart._xRange.domain(),
+                            y: chart._yRange.domain()
+                        };
+                        domains.x[0] = domains.x[0].toFixed(numDecimalPlaces);
+                        domains.x[1] = domains.x[1].toFixed(numDecimalPlaces);
+                        domains.y[0] = domains.y[0].toFixed(numDecimalPlaces);
+                        domains.y[1] = domains.y[1].toFixed(numDecimalPlaces);
+                        return domains;
+                    }
+                    var origDomains = getDomains();
+                    expect(origDomains.x).toEqual(['0.000', '50.000']);
+                    expect(origDomains.y).toEqual(['-2.222', '113.333']);
+
+                    Utils.trigger(container, 'mousedown', 50, 50);
+                    Utils.trigger(container, 'mousemove', 100, 100);
+                    Utils.trigger(container, 'mouseup');
+
+                    var newDomains = getDomains();
+                    expect(newDomains.x).toEqual(['-3.671', '-0.506']);
+                    expect(newDomains.y).toEqual(['89.709', '102.548']);
+                });
+
+                describe('Dragging', function() {
+                    function testDrag(opts) {
+                        Utils.trigger(container, 'mousedown', opts.x1, opts.y1);
+                        Utils.trigger(container, 'mousemove', opts.x2, opts.y2);
+
+                        var bbox = d3.select('.zoom_box').node().getBBox();
+                        expect(bbox.x).toBe(opts.expectedX);
+                        expect(bbox.y).toBe(opts.expectedY);
+                        expect(bbox.width).toBe(opts.expectedWidth);
+                        expect(bbox.height).toBe(opts.expectedHeight);
+
+                        Utils.trigger(container, 'mouseup');
+                    }
+
+                    it('should size appropriately when dragging down-right', function() {
+                        testDrag({
+                            x1             : 100,
+                            y1             : 100,
+                            x2             : 200,
+                            y2             : 200,
+                            expectedX      : 92,
+                            expectedY      : 92,
+                            expectedWidth  : 100,
+                            expectedHeight : 100
+                        });
+                    });
+
+                    it('should size appropriately when dragging up-left', function() {
+                        testDrag({
+                            x1             : 200,
+                            y1             : 200,
+                            x2             : 100,
+                            y2             : 100,
+                            expectedX      : 92,
+                            expectedY      : 92,
+                            expectedWidth  : 100,
+                            expectedHeight : 100
+                        });
+                    });
+
+                    it('should size appropriately when dragging up-right', function() {
+                        testDrag({
+                            x1             : 100,
+                            y1             : 100,
+                            x2             : 200,
+                            y2             : 50,
+                            expectedX      : 92,
+                            expectedY      : 42,
+                            expectedWidth  : 100,
+                            expectedHeight : 50
+                        });
+                    });
+
+                    it('should size appropriately when dragging down-left', function() {
+                        testDrag({
+                            x1             : 100,
+                            y1             : 100,
+                            x2             : 50,
+                            y2             : 200,
+                            expectedX      : 42,
+                            expectedY      : 92,
+                            expectedWidth  : 50,
+                            expectedHeight : 100
+                        });
+                    });
+                });
+            });
+        });
+
     });
 
 });
