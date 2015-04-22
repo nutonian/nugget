@@ -21,6 +21,7 @@ define([
                         expect(checkIfImplemented(proto.update)).toBe(true);
                         expect(checkIfImplemented(proto.remove)).toBe(true);
                         expect(checkContains(proto.draw, '_applyInserts')).toBe(true);
+                        expect(checkContains(proto.draw, 'this.el =')).toBe(true);
                     });
                 });
             }
@@ -30,6 +31,5 @@ define([
                     addCheck(NuggetModule, name);
                 }
             }
-
         });
     });

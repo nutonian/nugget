@@ -42,6 +42,26 @@ function (
             expect(dataCopy).not.toBe(data);
         });
 
+        function addCheck(NuggetModule, name) {
+            describe(name, function() {
+                it('should implement all required DataSeries methods and calls', function() {
+                    var ctor = NuggetModule.prototype.constructor;
+                    var scales = ctor.ComputeScales([]);
+                    expect(scales.x).toBeDefined();
+                    expect(scales.y).toBeDefined();
+
+                    var rangeMethod = ctor.GetRangeMethod();
+                    expect(typeof rangeMethod).toBe('string');
+                });
+            });
+        }
+        for (var name in Nugget) {
+            var NuggetModule = Nugget[name];
+            if (Nugget.DataSeries.isPrototypeOf(NuggetModule)) {
+                addCheck(NuggetModule, name);
+            }
+        }
+
     });
 
 });

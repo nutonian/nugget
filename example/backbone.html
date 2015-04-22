@@ -18,6 +18,10 @@
             stroke-width: 1;
             stroke: #bbb;
         }
+        .guide_label_bg {
+            fill: white;
+            stroke: black;
+        }
     </style>
 </head>
 <body>
@@ -81,12 +85,12 @@
             var testModel = new TestModel({
                 data_series: [
                     {x: 0, y: 0},
-                    {x: 1, y: 1},
-                    {x: 2, y: 2},
-                    {x: 3, y: 1},
-                    {x: 4, y: 0},
-                    {x: 5, y: 1},
-                    {x: 6, y: 2}
+                    {x: 100, y: 10},
+                    {x: 200, y: 20},
+                    {x: 300, y: 10},
+                    {x: 400, y: 0},
+                    {x: 500, y: 10},
+                    {x: 600, y: 50}
                 ]
             });
 
@@ -111,7 +115,10 @@
                             bottom: 20,
                             left: 100,
                             right: 20
-                        }
+                        },
+                        guides: true,
+                        yGrid: true,
+                        guideFontSize: 14
                     });
                     var color = d3.scale.category20();
                     var lineGraph = this.lineGraph = new Nugget.LineGraph({
