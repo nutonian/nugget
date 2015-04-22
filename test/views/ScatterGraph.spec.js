@@ -7,7 +7,7 @@ function (
     d3
 ) {
     describe('Scatter Plot Tests', function () {
-        var data = [{x:0, y:10},{x:1, y:16},{x:2, y:11},{x:3, y:12},{x:4, y:19},{x:5, y:20},{x:6, y:13},{x:7, y:15},{x:8, y:18},{x:9, y:25},{x:10, y:27},{x:11, y:26},{x:12, y:30},{x:13, y:25}];
+        var data = [{x_value: 0, y_value: 10},{x_value: 1, y_value: 16},{x_value: 2, y_value: 11},{x_value: 3, y_value: 12},{x_value: 4, y_value: 19},{x_value: 5, y_value: 20},{x_value: 6, y_value: 13},{x_value: 7, y_value: 15},{x_value: 8, y_value: 18},{x_value: 9, y_value: 25},{x_value: 10, y_value: 27},{x_value: 11, y_value: 26},{x_value: 12, y_value: 30},{x_value: 13, y_value: 25}];
 
         var svg = document.createElement('svg');
         svg.setAttribute('id', 'foo');

@@ -14,7 +14,7 @@ function (
 
         beforeEach(function() {
             aggregateDataRange = new Nugget.AggregateDataRange();
-            numericalDataSeries = new Nugget.NumericalDataSeries([{x: 1, y: 2}]);
+            numericalDataSeries = new Nugget.NumericalDataSeries([{x_value: 1, y_value: 2}]);
         });
 
         it('should add a DataSeries', function(done) {
@@ -43,11 +43,11 @@ function (
                 expect(dataSeries).toBe(numericalDataSeries);
                 done();
             });
-            numericalDataSeries.setData([{x: 50, y: 50}]);
+            numericalDataSeries.setData([{x_value: 50, y_value: 50}]);
         });
 
         it('should combine all child DataSeries data', function() {
-            var allData = [{x: 1, y: 2}, {x: 3, y: 4}];
+            var allData = [{x_value: 1, y_value: 2}, {x_value: 3, y_value: 4}];
             aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([allData[0]]) );
             aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([allData[1]]) );
             expect(aggregateDataRange.getData()).toEqual(allData);
@@ -59,10 +59,10 @@ function (
             var yMin = 1;
             var yMax = 300;
 
-            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: xMin, y: yMin }]) );
-            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: 10,   y: 20   }]) );
-            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: 30,   y: 40   }]) );
-            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x: xMax, y: yMax }]) );
+            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x_value: xMin, y_value: yMin }]) );
+            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x_value: 10,   y_value: 20   }]) );
+            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x_value: 30,   y_value: 40   }]) );
+            aggregateDataRange.addDataSeries( new Nugget.NumericalDataSeries([{ x_value: xMax, y_value: yMax }]) );
 
             var scales = aggregateDataRange.getScales(30, 50);
             expect(scales.x.domain()).toEqual([xMin, xMax]);

@@ -8,8 +8,8 @@ function (
     d3
 ) {
     describe('Chart tests', function() {
-        var lineGraphData1 = [ { "x": 0, "y": 0 }  , { "x": 50, "y": 50 }, { "x": 0, "y": 100 } ];
-        var lineGraphData2 = [ { "x": 0, "y": 100 }, { "x": 50, "y": 50 }, { "x": 100, "y": 0 } ];
+        var lineGraphData1 = [ { "x_value": 0, "y_value": 0 }  , { "x_value": 50, "y_value": 50 }, { "x_value": 0, "y_value": 100 } ];
+        var lineGraphData2 = [ { "x_value": 0, "y_value": 100 }, { "x_value": 50, "y_value": 50 }, { "x_value": 100, "y_value": 0 } ];
 
         var dataSeries1 = new Nugget.NumericalDataSeries(lineGraphData1);
         var dataSeries2 = new Nugget.NumericalDataSeries(lineGraphData2);
@@ -169,7 +169,7 @@ function (
                 expect(xAxisTick.attributes['y2'].value).toBe(-height+'');
 
                 expect(yAxisTick.attributes['stroke-dasharray'].value).toBe('1,2');
-                expect(yAxisTick.attributes['x2'].value).toBe(width+'');
+                expect(yAxisTick.attributes['x2'].value).toBe((width - (chart.margins.left + chart.margins.right)) +'');
             });
 
             it('should render x/y guides at the mouse position', function() {

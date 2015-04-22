@@ -7,47 +7,102 @@ function (
     d3
 ) {
     describe('Trend Line Tests', function () {
-        var data = [{x:0, y:10},{x:1, y:16},{x:2, y:11},{x:3, y:12},{x:4, y:19},{x:5, y:20},{x:6, y:13},{x:7, y:15},{x:8, y:18},{x:9, y:25},{x:10, y:27},{x:11, y:26},{x:12, y:30},{x:13, y:25}];
+        var $svg;
+        var chart;
+        var dataSeries;
 
-        var svg = document.createElement('svg');
-        svg.setAttribute('id', 'foo');
+        var data = [{x_value: 0, y_value: 10},{x_value: 1, y_value: 16},{x_value: 2, y_value: 11},{x_value: 3, y_value: 12},{x_value: 4, y_value: 19},{x_value: 5, y_value: 20},{x_value: 6, y_value: 13},{x_value: 7, y_value: 15},{x_value: 8, y_value: 18},{x_value: 9, y_value: 25},{x_value: 10, y_value: 27},{x_value: 11, y_value: 26},{x_value: 12, y_value: 30},{x_value: 13, y_value: 25}];
+
+
 
         beforeEach(function() {
-            document.body.insertBefore(svg, document.body.firstChild);
+            $svg = $(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+            $svg.attr('id', 'container').appendTo('body');
+
+            chart = new Nugget.Chart({
+                width: 300,
+                height: 300
+            });
+            dataSeries = new Nugget.NumericalDataSeries(data);
         });
 
         afterEach(function() {
-            svg.parentElement.removeChild(svg);
+            $('#container').remove();
+            chart = null;
         });
 
-        it('should render a trendline', function() {
-            var dataSeries = new Nugget.NumericalDataSeries(data);
-
-            var chart = new Nugget.Chart();
+        it('should render a positive trendline', function() {
 
             var trendline = new Nugget.TrendLine({
                 dataSeries: dataSeries,
                 color: 'blue',
-                slope: 0.87
+                slope: 1,
+                offset: 5
             });
 
             chart.add(trendline);
 
-            chart.appendTo('#foo');
+            chart.appendTo('#container');
 
-            var renderedLine = document.querySelectorAll('.slope')[0];
+            var $renderedLine = $('.slope');
 
-            expect(renderedLine).toBeDefined();
+            expect($renderedLine).toBeDefined();
 
-            var x1 = renderedLine.getAttribute('x1');
-            var x2 = renderedLine.getAttribute('x2');
-            var y1 = renderedLine.getAttribute('y1');
-            var y2 = renderedLine.getAttribute('y2');
+            var x1 = $renderedLine.attr('x1');
+            var x2 = $renderedLine.attr('x2');
+            var y1 = $renderedLine.attr('y1');
+            var y2 = $renderedLine.attr('y2');
 
-            expect(parseInt(x1, 0)).toBeDefined();
-            expect(parseInt(x2, 0)).toBeDefined();
-            expect(parseInt(y1, 0)).toBeDefined();
-            expect(parseInt(y2, 0)).toBeDefined();
+            expect(parseInt(x1, 0)).toBe(100);
+            expect(parseInt(x2, 0)).toBe(290);
+            expect(parseInt(y1, 0)).toBe(291);
+            expect(parseInt(y2, 0)).toBe(164);
+        });
+        it('should render a flat trendline', function() {
+            var trendline = new Nugget.TrendLine({
+                dataSeries: dataSeries,
+                color: 'purple',
+                slope: 0,
+                offset: 0
+            });
+
+            chart.add(trendline);
+            chart.appendTo('#container');
+
+            var $renderedLine = $('.slope');
+
+            var x1 = $renderedLine.attr('x1');
+            var x2 = $renderedLine.attr('x2');
+            var y1 = $renderedLine.attr('y1');
+            var y2 = $renderedLine.attr('y2');
+
+            expect(parseInt(x1, 0)).toBe(100);
+            expect(parseInt(x2, 0)).toBe(290);
+            expect(parseInt(y1, 0)).toBe(339);
+            expect(parseInt(y2, 0)).toBe(339);
+        });
+        it('should render a negative trendline', function() {
+            var trendline = new Nugget.TrendLine({
+                dataSeries: dataSeries,
+                color: 'brown',
+                slope: -1,
+                offset: 0
+            });
+
+            chart.add(trendline);
+            chart.appendTo('#container');
+
+            var $renderedLine = $('.slope');
+
+            var x1 = $renderedLine.attr('x1');
+            var x2 = $renderedLine.attr('x2');
+            var y1 = $renderedLine.attr('y1');
+            var y2 = $renderedLine.attr('y2');
+
+            expect(parseInt(x1, 0)).toBe(100);
+            expect(parseInt(x2, 0)).toBe(290);
+            expect(parseInt(y1, 0)).toBe(339);
+            expect(parseInt(y2, 0)).toBe(466);
         });
     });
 });
