@@ -155,9 +155,11 @@
                     return '<svg id="svg" width="900" height="500"></svg>';
                 },
 
-                // events: {
-                //     'click': 'onClick'
-                // },
+                events: {
+                    'mouseover .drawing_surface path' : function() {
+                        console.log('over path');
+                    }
+                },
 
                 counter: 0,
 
