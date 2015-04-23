@@ -47,6 +47,20 @@
             stroke-width: 1;
             stroke: #fff;
         }
+        svg {
+            cursor: default;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .zoom_box {
+            stroke: #ccc;
+            stroke-width: 2;
+            fill: rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -67,7 +81,7 @@
     require(['Nugget'], function (Nugget) {
         var data = [
             {
-                x: '0',
+                x_value: '0',
                 y_min: 1,
                 y_25pct: 25,
                 y_50pct: 50,
@@ -75,7 +89,7 @@
                 y_max: 99
             },
             {
-                x: '1',
+                x_value: '1',
                 y_min: 10,
                 y_25pct: 30,
                 y_50pct: 50,

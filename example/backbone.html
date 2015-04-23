@@ -22,6 +22,20 @@
             fill: white;
             stroke: black;
         }
+        svg {
+            cursor: default;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .zoom_box {
+            stroke: #ccc;
+            stroke-width: 2;
+            fill: rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -141,9 +155,9 @@
                     return '<svg id="svg" width="900" height="500"></svg>';
                 },
 
-                events: {
-                    'click': 'onClick'
-                },
+                // events: {
+                //     'click': 'onClick'
+                // },
 
                 counter: 0,
 
