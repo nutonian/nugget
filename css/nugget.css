@@ -1,0 +1,80 @@
+.nugget {
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    cursor: default;
+    user-select: none;
+}
+
+.domain {
+    fill: none;
+    stroke: #878787;
+    stroke-width: 1px;
+}
+
+.tick text {
+    fill: #878787;
+}
+
+.tick line {
+    stroke-width: 1;
+    stroke: #878787;
+}
+
+.bounding_box {
+    stroke-width: 1;
+    stroke: #878787;
+    fill: none;
+}
+
+.axis_label {
+    font-size: 1.2em;
+    fill: #696969;
+}
+
+.slope {
+    stroke-width: 1;
+    stroke: purple;
+    fill: transparent;
+}
+
+.zoom_box {
+    stroke: #ccc;
+    stroke-width: 2;
+    fill: rgba(255, 255, 255, 0.4);
+}
+
+.bin_circle, .legend_circle {
+    fill: rgba(0, 100, 255, 0.5);
+}
+
+.line_path {
+    stroke: #f90;
+    stroke-width: 2;
+}
+
+.guide_label_bg {
+    fill: white;
+    stroke: black;
+}
+
+.zoom_box {
+    stroke: #ccc;
+    stroke-width: 2;
+    fill: rgba(255, 255, 255, 0.4);
+}
+
+.max, .min, .range {
+    stroke-width: 1;
+    stroke: #09e;
+}
+
+.distribution {
+    stoke-width: 1;
+    fill: #09e;
+    stroke: #09e;
+}
+
+.median {
+    stroke-width: 1;
+    stroke: #fff;
+}

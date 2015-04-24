@@ -1,0 +1,121 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Binned mean plot in Nugget</h4>
+<svg class="nugget" id="container" width="900" height="500"></svg>
+<script>
+    require.config({
+        baseUrl: '/build'
+    });
+
+    require(['Nugget'], function (Nugget) {
+        var data = [
+            {
+                "num_values": 20,
+                "x_high": 19,
+                "x_low": 0,
+                "x_mean": 9.5,
+                "y_mean": 22.28901779265
+            },
+            {
+                "num_values": 20,
+                "x_high": 39,
+                "x_low": 20,
+                "x_mean": 29.5,
+                "y_mean": 26.1223793133
+            },
+            {
+                "num_values": 20,
+                "x_high": 59,
+                "x_low": 40,
+                "x_mean": 49.5,
+                "y_mean": 50.59547921799999
+            },
+            {
+                "num_values": 5,
+                "x_high": 74,
+                "x_low": 65,
+                "x_mean": 69.5,
+                "y_mean": 52.21847692600001
+            },
+            {
+                "num_values": 20,
+                "x_high": 99,
+                "x_low": 80,
+                "x_mean": 89.5,
+                "y_mean": 69.614231459
+            },
+            {
+                "num_values": 20,
+                "x_high": 119,
+                "x_low": 100,
+                "x_mean": 109.5,
+                "y_mean": 78.7650855345
+            },
+            {
+                "num_values": 20,
+                "x_high": 139,
+                "x_low": 120,
+                "x_mean": 129.5,
+                "y_mean": 100.4401427435
+            },
+            {
+                "num_values": 20,
+                "x_high": 159,
+                "x_low": 140,
+                "x_mean": 149.5,
+                "y_mean": 122.4695821675
+            },
+            {
+                "num_values": 20,
+                "x_high": 179,
+                "x_low": 160,
+                "x_mean": 169.5,
+                "y_mean": 127.579351081
+            },
+            {
+                "num_values": 120,
+                "x_high": 239,
+                "x_low": 140,
+                "x_mean": 189.5,
+                "y_mean": 137.978045743
+            }
+        ];
+
+        var dataSeries = new Nugget.BinnedMeanDataSeries(data);
+        var chart = new Nugget.Chart({
+            xGrid: true,
+            yGrid: true,
+            width: 900,
+            height: 500
+        });
+
+        var plot = new Nugget.BinnedMeanGraph({
+            dataSeries: dataSeries,
+            inserts: function(selection) {
+                for (var key in data[0]) {
+                    selection.attr('data-' + key, function(d) { return d[key]; });
+                }
+                selection.on('mouseover', function() {
+                    console.log('---- circle props ----');
+                    for (var key in data[0]) {
+                        console.log(this.attributes['data-'+key]);
+                    }
+                });
+            }
+        });
+
+        chart.add(plot);
+        chart.appendTo('#container');
+    });
+</script>
+</body>
+</html>

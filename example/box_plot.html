@@ -4,69 +4,19 @@
     <title>Nugget.js Graphing Library</title>
     <script src="/dependencies/d3.js"></script>
     <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
     <style type="text/css" media="screen">
-        body {
-            font-family: arial, sans-serif;
-            font-size: 14px;
-        }
-        .domain {
-            fill: none;
-            stroke: #878787;
-            stroke-width: 1px;
-        }
-        .tick text {
-            fill: #878787;
-        }
-        .tick line {
-            stroke-width: 1;
-            stroke: #878787;
-        }
-        .bounding_box {
-            stroke-width: 1;
-            stroke: #878787;
-            fill: none;
-        }
-        .axis_label {
-            font-size: 1.2em;
-            fill: #696969;
-        }
-        .foo {
+        .svg_container {
             width: 50%;
             height: 30em;
-        }
-        .max, .min, .range{
-            stroke-width: 1;
-            stroke: #09e;
-        }
-        .distribution {
-            stoke-width: 1;
-            fill: #09e;
-            stroke: #09e;
-        }
-        .median {
-            stroke-width: 1;
-            stroke: #fff;
-        }
-        svg {
-            cursor: default;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .zoom_box {
-            stroke: #ccc;
-            stroke-width: 2;
-            fill: rgba(255, 255, 255, 0.4);
         }
     </style>
 </head>
 <body>
 <h1>Nugget</h1>
 <h4>Box plot in Nugget</h4>
-<div class="foo">
+<div class="svg_container">
     <svg id="box_plot_nugget"></svg>
 </div>
 <script>

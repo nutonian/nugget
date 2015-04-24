@@ -4,43 +4,12 @@
     <title>Nugget.js Graphing Library</title>
     <script src="/dependencies/d3.js"></script>
     <script src="js/require.min.js"></script>
-    <style type="text/css" media="screen">
-        body {
-            font-family: arial, sans-serif;
-            font-size: 14px;
-        }
-        .domain {
-            fill: none;
-            stroke: #bbb;
-            stroke-width: 1px;
-        }
-        .tick line {
-            stroke-width: 1;
-            stroke: #bbb;
-        }
-        .guide_label_bg {
-            fill: white;
-            stroke: black;
-        }
-        svg {
-            cursor: default;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .zoom_box {
-            stroke: #ccc;
-            stroke-width: 2;
-            fill: rgba(255, 255, 255, 0.4);
-        }
-    </style>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
 </head>
 <body>
     <h1>Backbone/Layout Manager</h1>
-    <div id="main"></div>
+    <div class="svg_container" id="main"></div>
     <script>
         require.config({
             // Development
