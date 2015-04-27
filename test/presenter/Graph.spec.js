@@ -18,10 +18,8 @@ define([
                     it('should implement all required Graph methods and calls', function() {
                         var proto = NuggetModule.prototype;
                         expect(checkIfImplemented(proto.drawElement)).toBe(true);
-                        expect(checkIfImplemented(proto.update)).toBe(true);
                         expect(checkIfImplemented(proto.remove)).toBe(true);
                         expect(checkContains(proto.draw, '_applyInserts')).toBe(true);
-                        expect(checkContains(proto.draw, 'this.el =')).toBe(true);
                     });
                 });
             }

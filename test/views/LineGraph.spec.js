@@ -43,7 +43,7 @@ function (
 
             chart.appendTo('#container');
 
-            var $plotline = $('.line_path');
+            var $plotline = $('path.line');
 
             expect($plotline.length).toBe(1);
 
