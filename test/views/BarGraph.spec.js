@@ -50,7 +50,7 @@ function (
             chart.add(groupedBars);
             chart.appendTo('#container');
 
-            var renderedHtml = $('.grouped_bar rect');
+            var renderedHtml = $('rect.bar');
 
             expect(renderedHtml.length).toBe(dataArray.length);
         });

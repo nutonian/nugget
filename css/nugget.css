@@ -47,7 +47,7 @@
     fill: rgba(0, 100, 255, 0.5);
 }
 
-.line_path {
+path.line {
     stroke: #f90;
     stroke-width: 2;
 }

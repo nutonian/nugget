@@ -28,7 +28,7 @@ function (
                 'x_high': 60,
                 'x_mean': 55,
                 'y_mean': 55
-            },
+            }
         ];
 
         var $svg;
@@ -78,7 +78,7 @@ function (
 
         it('should plot a line', function() {
             var expectedLineData = 'M179,441.34615384615387L495,246.63461538461542L811,51.92307692307689';
-            var actualLineData = $svg.find('.line_path').attr('d');
+            var actualLineData = $svg.find('path.line').attr('d');
             expect(expectedLineData).toEqual(actualLineData);
         });
 
