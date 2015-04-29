@@ -31,6 +31,12 @@
     fill: #696969;
 }
 
+.legend_bg {
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
 .slope {
     stroke-width: 1;
     stroke: purple;

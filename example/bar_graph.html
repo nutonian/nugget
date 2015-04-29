@@ -6,6 +6,23 @@
     <script src="js/require.min.js"></script>
     <link type="text/css" href="/css/nugget.css" rel="stylesheet">
     <link type="text/css" href="example.css" rel="stylesheet">
+    <style>
+        .bar {
+            fill: green;
+        }
+
+        #bar_graph_grouped .bar[data-group_index="0"] {
+            fill: skyblue;
+        }
+
+        #bar_graph_grouped .bar[data-group_index="1"] {
+            fill: cadetblue;
+        }
+
+        #bar_graph_grouped .bar[data-group_index="2"] {
+            fill: royalblue;
+        }
+    </style>
 </head>
 <body>
 <h1>Nugget</h1>
@@ -18,9 +35,6 @@
     require.config({
         // Development
         baseUrl: '/build'
-
-        // Production
-        // baseUrl: '/release/'
     });
 
     require(['Nugget'], function (Nugget) {
@@ -28,7 +42,11 @@
 
         var dataSeries = new Nugget.OrdinalDataSeries(data);
 
-        var chart = new Nugget.Chart();
+        var chart = new Nugget.Chart({
+            width: 600,
+            height: 500,
+            legend: false
+        });
 
         var bars = new Nugget.BarGraph({
             dataSeries: dataSeries,
@@ -42,8 +60,16 @@
         var groupedData = [{x_value: ['A', '1'], y: 2}, {x_value: ['A', '2'], y: 15}, {x_value: ['B', '1'], y: 8}, {x_value: ['B', '2'], y: 6}, {x_value: ['B', '3'], y: 20}, {x_value: ['C', '1'], y: 16}];
 
         var gDataSeries = new Nugget.OrdinalDataSeries(groupedData);
-        var groupedChart = new Nugget.Chart();
+        var groupedChart = new Nugget.Chart({
+            axisLabels: {
+                x: ['foo', 'bar'],
+                y: 'count'
+            },
+            width: 600,
+            height: 500
+        });
 
+        var counts = {};
         var groupedBars = new Nugget.BarGraph({
             dataSeries: gDataSeries
         });
