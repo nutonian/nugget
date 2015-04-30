@@ -1,3 +1,4 @@
+/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -8,7 +9,6 @@ function (
 ) {
     describe('Bar Graph Plot Tests', function () {
         var $svg;
-        var chart;
 
         var dataNoArray = [{x_value: 'A', y: 2}, {x_value: 'B', y: 15}, {x_value: 'C', y: 8}, {x_value: 'D', y: 6}, {x_value: 'E', y: 20}, {x_value: 'F', y: 16}];
         var dataArray = [{x_value: ['0', '0'], y: 3}, {x_value: ['0', '1'], y: 10}, {x_value: ['1', '0'], y: 6}, {x_value: ['1', '1'], y: 13}];
@@ -16,43 +16,100 @@ function (
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
             $svg.attr('id', 'container').appendTo('body');
-
-            chart = new Nugget.Chart();
         });
 
         afterEach(function() {
             $('#container').remove();
-            chart = null;
         });
 
-        it('should render bar graphs', function() {
-            var dataSeries = new Nugget.OrdinalDataSeries(dataNoArray);
+        describe('Simple bar graph', function() {
+            var chart;
 
-            var bars = new Nugget.BarGraph({
-                dataSeries: dataSeries,
-                color: '#09e'
+            beforeEach(function() {
+                chart = new Nugget.Chart({
+                    width: 900,
+                    height: 500
+                });
             });
 
-            chart.add(bars);
-            chart.appendTo('#container');
+            afterEach(function() {
+                chart = null;
+            });
 
-            var renderedBars = document.querySelectorAll('.bar');
+            it('should render a bar graph', function() {
+                var dataSeries = new Nugget.OrdinalDataSeries(dataNoArray);
 
-            expect(renderedBars.length).toBe(dataNoArray.length);
+                var bars = new Nugget.BarGraph({
+                    dataSeries: dataSeries
+                });
+
+                chart.add(bars);
+                chart.appendTo('#container');
+
+                var renderedBars = document.querySelectorAll('.bar');
+
+                expect(renderedBars.length).toBe(dataNoArray.length);
+            });
         });
-        it('should render grouped bar graphs', function() {
-            var dataSeries = new Nugget.OrdinalDataSeries(dataArray);
 
-            var groupedBars = new Nugget.BarGraph({
-                dataSeries: dataSeries
+        describe('Grouped bar graph', function() {
+            it('should render a grouped bar graph', function() {
+                var chart = new Nugget.Chart({
+                    width: 900,
+                    height: 500
+                });
+
+                var dataSeries = new Nugget.OrdinalDataSeries(dataArray);
+
+                var groupedBars = new Nugget.BarGraph({
+                    dataSeries: dataSeries
+                });
+
+                chart.add(groupedBars);
+                chart.appendTo('#container');
+
+                expect($('rect[data-group="0"]').length).toBe(2);
+                expect($('rect[data-group="1"]').length).toBe(2);
             });
 
-            chart.add(groupedBars);
-            chart.appendTo('#container');
+            it('should render a legend', function() {
+                var css = '';
+                css += '[data-group_index="0"] { fill: orange; }';
+                css += '[data-group_index="1"] { fill: blue; }';
 
-            var renderedHtml = $('rect.bar');
+                var $style = $('style').attr('type', 'text/css');
+                $style.text(css);
+                $('head').append($style);
 
-            expect(renderedHtml.length).toBe(dataArray.length);
+                var chart = new Nugget.Chart({
+                    width: 900,
+                    height: 500,
+                    axisLabels: {
+                        x: ['foo', 'bar'],
+                        y: 'baz'
+                    }
+                });
+
+                var dataSeries = new Nugget.OrdinalDataSeries(dataArray);
+
+                var groupedBars = new Nugget.BarGraph({
+                    dataSeries: dataSeries
+                });
+
+                chart.add(groupedBars);
+                chart.appendTo('#container');
+
+                // PhantomJS doesn't evaluate css fill correctly :-(
+                if (!Utils.isPhantom()) {
+                    expect($('.legend_swatch:eq(0)').attr('fill')).toBe('rgb(255, 165, 0)');
+                    expect($('.legend_swatch:eq(1)').attr('fill')).toBe('rgb(0, 0, 255)');
+                }
+
+                expect($('.legend_group g:eq(0) text').text()).toBe('bar = 0');
+                expect($('.legend_group g:eq(1) text').text()).toBe('bar = 1');
+
+                $style.remove();
+            });
         });
     });
 });

@@ -5,5 +5,8 @@ window.Utils = {
         e.clientX = e.pageX = x || 0;
         e.clientY = e.pageY = y || 0;
         el.dispatchEvent(e);
+    },
+    isPhantom: function() {
+        return window.navigator.userAgent.indexOf('PhantomJS') > -1;
     }
 };
