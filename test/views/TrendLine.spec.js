@@ -55,8 +55,8 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(291);
-            expect(parseInt(y2, 0)).toBe(164);
+            expect(parseInt(y1, 0)).toBe(297);
+            expect(parseInt(y2, 0)).toBe(157);
         });
         it('should render a flat trendline', function() {
             var trendline = new Nugget.TrendLine({
@@ -101,8 +101,8 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(339);
-            expect(parseInt(y2, 0)).toBe(466);
+            expect(parseInt(y1, 0)).toBe(333);
+            expect(parseInt(y2, 0)).toBe(473);
         });
     });
 });
