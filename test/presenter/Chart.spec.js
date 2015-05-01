@@ -207,14 +207,17 @@ function (
         });
 
         describe('All platform tests', function() {
+
             describe('Box zoom', function() {
                 var chart;
                 var container;
+                var chartWidth = 900;
+                var chartHeight = 500;
 
                 beforeEach(function() {
                     chart = new Nugget.Chart({
-                        width: 900,
-                        height: 500
+                        width: chartWidth,
+                        height: chartHeight
                     });
                     chart.add(line);
                     chart.appendTo('#container');
@@ -238,30 +241,25 @@ function (
 
                 it('should zoom axes appropriately', function() {
                     function getDomains() {
-                        var numDecimalPlaces = 3;
                         var domains = {
                             x: chart._xRange.domain(),
                             y: chart._yRange.domain()
                         };
-                        domains.x[0] = domains.x[0].toFixed(numDecimalPlaces);
-                        domains.x[1] = domains.x[1].toFixed(numDecimalPlaces);
-                        domains.y[0] = domains.y[0].toFixed(numDecimalPlaces);
-                        domains.y[1] = domains.y[1].toFixed(numDecimalPlaces);
                         return domains;
                     }
                     var origDomains = getDomains();
-                    expect(origDomains.x).toEqual(['0.000', '50.000']);
-                    expect(origDomains.y).toEqual(['-2.222', '113.333']);
+                    expect(origDomains.x[0]).toBeCloseTo(0, 2);
+                    expect(origDomains.y[1]).toBeCloseTo(113.33, 2);
 
                     Utils.trigger(container, 'mousedown', 50, 50);
                     Utils.trigger(container, 'mousemove', 100, 100);
                     Utils.trigger(container, 'mouseup');
 
                     var newDomains = getDomains();
-                    expect(newDomains.x[0]).toBeCloseTo(-3.671, 2);
-                    expect(newDomains.x[1]).toBeCloseTo(-0.506, 2);
-                    expect(newDomains.y[0]).toBeCloseTo(89.709, 2);
-                    expect(newDomains.y[1]).toBeCloseTo(102.548, 2);
+                    expect(newDomains.x[0]).toBeCloseTo(0, 2);
+                    expect(newDomains.x[1]).toBeCloseTo(50, 2);
+                    expect(newDomains.y[0]).toBeCloseTo(-2.22, 2);
+                    expect(newDomains.y[1]).toBeCloseTo(113.33, 2);
                 });
 
                 describe('Dragging', function() {
@@ -278,55 +276,64 @@ function (
                         Utils.trigger(container, 'mouseup');
                     }
 
+                    // The first two tests intentionally start outside of the graph bounds to make
+                    // sure the zoom box still renders within the bounds.
+
+                    var innerLeft   = 100;
+                    var innerTop    = 0;
+                    var innerWidth  = 790;
+                    var innerHeight = 450;
+
                     it('should size appropriately when dragging down-right', function() {
                         testDrag({
-                            x1             : 100,
-                            y1             : 100,
-                            x2             : 200,
-                            y2             : 200,
-                            expectedX      : 92,
-                            expectedY      : 92,
-                            expectedWidth  : 100,
-                            expectedHeight : 100
+                            x1             : 0,
+                            y1             : 0,
+                            x2             : chartWidth + 100,
+                            y2             : chartHeight + 100,
+                            expectedX      : innerLeft,
+                            expectedY      : innerTop,
+                            expectedWidth  : innerWidth,
+                            expectedHeight : innerHeight
                         });
                     });
 
                     it('should size appropriately when dragging up-left', function() {
                         testDrag({
-                            x1             : 200,
-                            y1             : 200,
-                            x2             : 100,
-                            y2             : 100,
-                            expectedX      : 92,
-                            expectedY      : 92,
-                            expectedWidth  : 100,
-                            expectedHeight : 100
+                            x1             : chartWidth + 100,
+                            y1             : chartHeight + 100,
+                            x2             : 0,
+                            y2             : 0,
+                            expectedX      : innerLeft,
+                            expectedY      : innerTop,
+                            expectedWidth  : innerWidth,
+                            expectedHeight : innerHeight
                         });
                     });
 
+                    // These test dragging inside of the graph
                     it('should size appropriately when dragging up-right', function() {
                         testDrag({
-                            x1             : 100,
-                            y1             : 100,
-                            x2             : 200,
-                            y2             : 50,
-                            expectedX      : 92,
-                            expectedY      : 42,
+                            x1             : 500,
+                            y1             : 500,
+                            x2             : 600,
+                            y2             : 400,
+                            expectedX      : 492,
+                            expectedY      : 392,
                             expectedWidth  : 100,
-                            expectedHeight : 50
+                            expectedHeight : 58
                         });
                     });
 
                     it('should size appropriately when dragging down-left', function() {
                         testDrag({
-                            x1             : 100,
-                            y1             : 100,
-                            x2             : 50,
-                            y2             : 200,
-                            expectedX      : 42,
-                            expectedY      : 92,
-                            expectedWidth  : 50,
-                            expectedHeight : 100
+                            x1             : 500,
+                            y1             : 500,
+                            x2             : 400,
+                            y2             : 420,
+                            expectedX      : 392,
+                            expectedY      : 412,
+                            expectedWidth  : 100,
+                            expectedHeight : 38
                         });
                     });
                 });
