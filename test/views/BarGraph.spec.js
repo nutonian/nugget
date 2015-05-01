@@ -19,7 +19,7 @@ function (
         });
 
         afterEach(function() {
-            $('#container').remove();
+            //$('#container').remove();
         });
 
         describe('Simple bar graph', function() {
