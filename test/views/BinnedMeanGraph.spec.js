@@ -56,9 +56,9 @@ function (
 
         it('should plot circles', function() {
             var expectedVals = [
-                {'r': '5',  'cx': 179, 'cy': 441 },
+                {'r': '5',  'cx': 100, 'cy': 441 },
                 {'r': '17.5',  'cx': 495, 'cy': 246 },
-                {'r': '30', 'cx': 811, 'cy': 51 }
+                {'r': '30', 'cx': 890, 'cy': 51 }
             ];
             var actualVals = $svg.find('.bin_circle').map(function() {
                 var $circle = $(this);
@@ -77,7 +77,7 @@ function (
         });
 
         it('should plot a line', function() {
-            var expectedLineData = 'M179,441.34615384615387L495,246.63461538461542L811,51.92307692307689';
+            var expectedLineData = 'M100,441.34615384615387L495,246.63461538461542L890,51.92307692307689';
             var actualLineData = $svg.find('path.line').attr('d');
             expect(expectedLineData).toEqual(actualLineData);
         });
