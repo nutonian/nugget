@@ -77,7 +77,7 @@ function (
                 css += '[data-group_index="0"] { fill: orange; }';
                 css += '[data-group_index="1"] { fill: blue; }';
 
-                var $style = $('style').attr('type', 'text/css');
+                var $style = $('<style>').attr('type', 'text/css');
                 $style.text(css);
                 $('head').append($style);
 
