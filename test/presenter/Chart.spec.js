@@ -224,6 +224,19 @@ function (
                     container = $('#container')[0];
                 });
 
+                afterEach(function() {
+                    chart = null;
+                    $('#container').empty();
+                });
+
+                function getDomains() {
+                    var domains = {
+                        x: chart._xRange.domain(),
+                        y: chart._yRange.domain()
+                    };
+                    return domains;
+                }
+
                 it('should be on by default', function() {
                     expect(chart.boxZoom).toBe(true);
                 });
@@ -240,13 +253,6 @@ function (
                 });
 
                 it('should zoom axes appropriately', function() {
-                    function getDomains() {
-                        var domains = {
-                            x: chart._xRange.domain(),
-                            y: chart._yRange.domain()
-                        };
-                        return domains;
-                    }
                     var origDomains = getDomains();
                     expect(origDomains.x[0]).toBeCloseTo(0, 2);
                     expect(origDomains.y[1]).toBeCloseTo(113.33, 2);
@@ -260,6 +266,21 @@ function (
                     expect(newDomains.x[1]).toBeCloseTo(50, 2);
                     expect(newDomains.y[0]).toBeCloseTo(-2.22, 2);
                     expect(newDomains.y[1]).toBeCloseTo(113.33, 2);
+                });
+
+                it('should reset zoom on doubleclick', function() {
+                    var origDomains = getDomains();
+
+                    Utils.trigger(container, 'mousedown', 50, 50);
+                    Utils.trigger(container, 'mousemove', 200, 200);
+                    Utils.trigger(container, 'mouseup');
+
+                    expect(getDomains()).not.toEqual(origDomains);
+
+                    // Two fast mousedowns = doubleclick. The previous "mousedown" counts as the first click
+                    // which is fine for testing purposes.
+                    Utils.trigger(container, 'mousedown');
+                    expect(getDomains()).toEqual(origDomains);
                 });
 
                 describe('Dragging', function() {
@@ -276,14 +297,13 @@ function (
                         Utils.trigger(container, 'mouseup');
                     }
 
-                    // The first two tests intentionally start outside of the graph bounds to make
-                    // sure the zoom box still renders within the bounds.
-
                     var innerLeft   = 100;
                     var innerTop    = 0;
                     var innerWidth  = 790;
                     var innerHeight = 450;
 
+                    // The first two tests intentionally start outside of the graph bounds to make
+                    // sure the zoom box still renders within the bounds.
                     it('should size appropriately when dragging down-right', function() {
                         testDrag({
                             x1             : 0,
