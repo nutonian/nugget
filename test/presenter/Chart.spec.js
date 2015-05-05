@@ -383,30 +383,33 @@ function (
                     expect(legendYRangeMax).toBeGreaterThan(noLegendYRangeMax);
                 });
             });
+            it('should render labels without formatting', function() {
+                var chart = new Nugget.Chart();
+                chart.add(line);
+                chart.appendTo('#container');
 
-            describe('Axis format', function() {
+                var tick = $('.y_axis g.tick text').eq(15).text();
 
-                it('should render labels without formatting', function() {
-                    var chart = new Nugget.Chart();
-                    chart.add(line);
-                    chart.appendTo('#container');
+                expect(tick).toBe('40');
 
-                    var tick = $('.x_axis g.tick text').eq(0);
+                tick = $('.x_axis g.tick text').eq(1).text();
 
-                    expect(tick[0].innerHTML).toBe('0');
+                expect(tick).toBe('5');
+            });
+            it('should render labels with formatting', function() {
+                var chart = new Nugget.Chart({
+                    yLabelFormat: '.6s'
                 });
+                chart.add(line);
+                chart.appendTo('#container');
 
-                it('should render labels with formatting', function() {
-                    var chart = new Nugget.Chart({
-                        xAxisLabel: '.4s'
-                    });
-                    chart.add(line);
-                    chart.appendTo('#container');
+                var tick = $('.y_axis g.tick text').eq(10).text();
 
-                    var tick = $('.x_axis g.tick text').eq(1);
+                expect(tick).toBe('100');
 
-                    expect(tick[0].innerHTML).toBe('5');
-                });
+                tick = $('.x_axis g.tick text').eq(1).text();
+
+                expect(tick).toBe('5');
             });
         });
 
