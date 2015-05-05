@@ -395,6 +395,8 @@ function (
                 tick = $('.x_axis g.tick text').eq(1).text();
 
                 expect(tick).toBe('5');
+
+                $('#container').empty();
             });
             it('should render labels with formatting', function() {
                 var chart = new Nugget.Chart({
@@ -405,7 +407,7 @@ function (
 
                 var tick = $('.y_axis g.tick text').eq(10).text();
 
-                expect(tick).toBe('100');
+                expect(tick).toBe('100.000');
 
                 tick = $('.x_axis g.tick text').eq(1).text();
 
