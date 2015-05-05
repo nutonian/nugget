@@ -58,6 +58,10 @@ path.line {
     stroke-width: 2;
 }
 
+.guide_line {
+    stroke: rgba(100, 100, 100, 0.3);
+}
+
 .guide_label_bg {
     fill: white;
     stroke: black;
@@ -67,6 +71,10 @@ path.line {
     stroke: #ccc;
     stroke-width: 2;
     fill: rgba(255, 255, 255, 0.4);
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 .max, .min, .range {
