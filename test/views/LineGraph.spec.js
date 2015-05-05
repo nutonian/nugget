@@ -21,7 +21,7 @@ function (
         });
 
         afterEach(function() {
-            $('.container').remove();
+            $svg.remove();
             chart = null;
         });
 
