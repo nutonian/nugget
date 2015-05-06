@@ -59,12 +59,17 @@ path.line {
 }
 
 .guide_line {
-    stroke: rgba(100, 100, 100, 0.3);
+    pointer-events: none;
+    stroke: #aaa;
 }
 
 .guide_label_bg {
     fill: white;
     stroke: black;
+}
+
+.binned_mean_x_range_guide .binned_mean_guide {
+    stroke: #111;
 }
 
 .zoom_box {

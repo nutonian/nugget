@@ -1,3 +1,4 @@
+/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -85,6 +86,67 @@ function (
         it('should render a legend', function() {
             expect($svg.find('.legend_circle').attr('r')).toBe('10');
             expect($svg.find('.legend_label').text()).toBe('approx. 14 values');
+        });
+
+        describe('guides', function() {
+            it('should show guides for a circle', function() {
+                function validateGuide($el, opts) {
+                    var $text = $el.find('.guide_label');
+                    expect($text.text()).toBe(opts.label.text);
+                    expect(Number($text.attr('x'))).toBeCloseTo(opts.label.x, 0);
+                    expect(Number($text.attr('y'))).toBeCloseTo(opts.label.y, 0);
+
+                    var $bg = $el.find('.guide_label_bg');
+                    expect(Number($bg.attr('x'))).toBeCloseTo(opts.bg.x, 0);
+                    expect(Number($bg.attr('y'))).toBeCloseTo(opts.bg.y, 0);
+                    expect(Number($bg.attr('width'))).toBeCloseTo(opts.bg.width, 0);
+                    expect(Number($bg.attr('height'))).toBeCloseTo(opts.bg.height, 0);
+                }
+
+                var el = $('.bin_circle:eq(1)')[0];
+                Utils.trigger(el, 'mouseenter');
+
+                validateGuide($('.binned_mean_x_range_guide'), {
+                    label: {
+                        text: 'From 30 to 40',
+                        x: 495,
+                        y: 467
+                    },
+                    bg: {
+                        x: 453,
+                        y: 454,
+                        width: 85,
+                        height: 15
+                    }
+                });
+
+                validateGuide($('.binned_mean_y_guide'), {
+                    label: {
+                        text: '35',
+                        x: 93,
+                        y: 251
+                    },
+                    bg: {
+                        x: 76.5,
+                        y: 238,
+                        width: 19,
+                        height: 15
+                    }
+                });
+            });
+
+            it('should hide guides for a circle', function() {
+
+            });
+
+            it('should constrain x range guide to stay within xMin', function() {
+
+            });
+
+            it('should constrain x range guide to stay within xMax', function() {
+
+            });
+
         });
     });
 });

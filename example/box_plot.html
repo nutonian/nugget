@@ -50,7 +50,9 @@
 
         var dataSeries = new Nugget.BoxPlotDataSeries(data);
 
-        var chart = new Nugget.Chart();
+        var chart = new Nugget.Chart({
+            yLabelFormat: '.3f'
+        });
 
         var boxes = new Nugget.BoxPlot({
             dataSeries: dataSeries,

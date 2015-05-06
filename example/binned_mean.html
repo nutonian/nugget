@@ -21,7 +21,7 @@
             {
                 "num_values": 20,
                 "x_high": 19,
-                "x_low": 0,
+                "x_low": -10,
                 "x_mean": 9.5,
                 "y_mean": 22.28901779265
             },
@@ -95,12 +95,15 @@
             xGrid: true,
             yGrid: true,
             width: 900,
-            height: 500
+            height: 500,
+            xLabelFormat: '.1f',
+            yLabelFormat: '.2f'
         });
 
         var plot = new Nugget.BinnedMeanGraph({
             dataSeries: dataSeries,
             inserts: function(selection) {
+                /*
                 for (var key in data[0]) {
                     selection.attr('data-' + key, function(d) { return d[key]; });
                 }
@@ -110,6 +113,7 @@
                         console.log(this.attributes['data-'+key]);
                     }
                 });
+                */
             }
         });
 
