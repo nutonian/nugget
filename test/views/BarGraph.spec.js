@@ -72,6 +72,33 @@ function (
                 expect($('rect[data-group="1"]').length).toBe(2);
             });
 
+            it('should render axis ticks correctly', function() {
+                var chart = new Nugget.Chart({
+                    width: 900,
+                    height: 500
+                });
+
+                var dataSeries = new Nugget.OrdinalDataSeries(dataNoArray);
+
+                var groupedBars = new Nugget.BarGraph({
+                    dataSeries: dataSeries
+                });
+
+                chart.add(groupedBars);
+                chart.appendTo('#container');
+
+                var xAxisTicks = $('.x_axis .tick text').map(function() {
+                    return $(this).text();
+                }).toArray();
+
+                var yAxisTicks = $('.y_axis .tick text').map(function() {
+                    return $(this).text();
+                }).toArray();
+
+                expect(xAxisTicks).toEqual(['A', 'B', 'C', 'D', 'E', 'F']);
+                expect(yAxisTicks).toEqual(['2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22']);
+            });
+
             it('should render a legend', function() {
                 var css = '';
                 css += '[data-group_index="0"] { fill: orange; }';
