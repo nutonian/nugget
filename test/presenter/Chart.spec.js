@@ -412,6 +412,34 @@ function (
                 tick = $('.x_axis g.tick text').eq(1).text();
 
                 expect(tick).toBe('5');
+                $('#container').empty();
+            });
+            it('should update ranges when data changes', function() {
+                var chart = new Nugget.Chart();
+                var testDataChangeSeries = new Nugget.NumericalDataSeries(lineGraphData1);
+                var testLineChange = new Nugget.LineGraph({
+                    dataSeries: testDataChangeSeries
+                });
+
+                chart.add(testLineChange);
+
+                chart.appendTo('#container');
+
+                var currentXDomain = chart._xRange.domain();
+                var currentYDomain = chart._yRange.domain();
+
+                expect(currentXDomain).toEqual([ -1.824817518248175, 51.82481751824818 ]);
+                expect(currentYDomain).toEqual([ -1.3888888888888888, 108.33333333333333 ]);
+
+                var newdata = [{x_value: 3, y_value:12}, {x_value: 4, y_value: 20}];
+
+                testDataChangeSeries.setData(newdata);
+
+                var newXDomain = chart._xRange.domain();
+                var newYDomain = chart._yRange.domain();
+
+                expect(newXDomain).toEqual([ 3, 4]);
+                expect(newYDomain).toEqual([12, 20]);
             });
         });
 
