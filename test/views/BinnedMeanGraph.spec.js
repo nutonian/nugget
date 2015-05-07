@@ -44,7 +44,8 @@ function (
             });
             var dataSeries = new Nugget.BinnedMeanDataSeries(data);
             var binnedMeanGraph = new Nugget.BinnedMeanGraph({
-                dataSeries: dataSeries
+                dataSeries: dataSeries,
+                guides: true
             });
             chart.add(binnedMeanGraph);
             chart.appendTo('#container');

@@ -40,7 +40,8 @@ function (
             });
             var boxes = new Nugget.BoxPlot({
                 dataSeries: dataSeries,
-                color: '#09e'
+                color: '#09e',
+                guides: true
             });
             chart.add(boxes);
             chart.appendTo('#container');
