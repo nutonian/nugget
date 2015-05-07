@@ -204,6 +204,10 @@ function (
                 var yAxisLabel = document.querySelectorAll('#container .y_axis_guide_label')[0];
                 expect(yAxisLabel.innerHTML).toBe('64');
             });
+
+            it('should create axis formatters', function() {
+                //
+            });
         });
 
         describe('All platform tests', function() {

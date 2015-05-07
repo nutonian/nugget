@@ -40,7 +40,8 @@ function (
             });
             var boxes = new Nugget.BoxPlot({
                 dataSeries: dataSeries,
-                color: '#09e'
+                color: '#09e',
+                guides: true
             });
             chart.add(boxes);
             chart.appendTo('#container');
@@ -91,7 +92,7 @@ function (
                 expect(bgData).toEqual([
                     {'x': '83.5', 'y': '435.34375', 'width': '12', 'height': '15'},
                     {'x': '76.5', 'y': '339.96875', 'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '240.625', 'width': '19', 'height': '15'},
+                    {'x': '76.5', 'y': '240.625',   'width': '19', 'height': '15'},
                     {'x': '76.5', 'y': '141.28125', 'width': '19', 'height': '15'},
                     {'x': '76.5', 'y': '45.921875', 'width': '19', 'height': '15'}
                 ]);
