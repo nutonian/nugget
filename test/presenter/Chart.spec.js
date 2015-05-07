@@ -415,7 +415,10 @@ function (
                 $('#container').empty();
             });
             it('should update ranges when data changes', function() {
-                var chart = new Nugget.Chart();
+                var chart = new Nugget.Chart({
+                    width: 500,
+                    height: 500
+                });
                 var testDataChangeSeries = new Nugget.NumericalDataSeries(lineGraphData1);
                 var testLineChange = new Nugget.LineGraph({
                     dataSeries: testDataChangeSeries
@@ -428,8 +431,8 @@ function (
                 var currentXDomain = chart._xRange.domain();
                 var currentYDomain = chart._yRange.domain();
 
-                expect(currentXDomain).toEqual([ -1.824817518248175, 51.82481751824818 ]);
-                expect(currentYDomain).toEqual([ -1.3888888888888888, 108.33333333333333 ]);
+                expect(currentXDomain).toEqual([ -1.282051282051282, 51.28205128205128 ]);
+                expect(currentYDomain).toEqual([ -2.2222222222222223, 113.33333333333333 ]);
 
                 var newdata = [{x_value: 3, y_value:12}, {x_value: 4, y_value: 20}];
 
@@ -438,8 +441,8 @@ function (
                 var newXDomain = chart._xRange.domain();
                 var newYDomain = chart._yRange.domain();
 
-                expect(newXDomain).toEqual([ 3, 4]);
-                expect(newYDomain).toEqual([12, 20]);
+                expect(newXDomain).toEqual([ 2.974358974358974, 4.0256410256410255 ]);
+                expect(newYDomain).toEqual([ 11.822222222222221, 21.066666666666663 ]);
             });
         });
 
