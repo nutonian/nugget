@@ -212,6 +212,10 @@ function (
 
         describe('All platform tests', function() {
 
+            afterEach(function() {
+                $('#container').empty();
+            });
+
             describe('Box zoom', function() {
                 var chart;
                 var container;
@@ -389,18 +393,15 @@ function (
             });
             it('should render labels without formatting', function() {
                 var chart = new Nugget.Chart();
+
                 chart.add(line);
                 chart.appendTo('#container');
 
-                var tick = $('.y_axis g.tick text').eq(15).text();
+                var xTick = $('.x_axis g.tick text').eq(1).text();
+                expect(xTick).toBe('5');
 
-                expect(tick).toBe('40');
-
-                tick = $('.x_axis g.tick text').eq(1).text();
-
-                expect(tick).toBe('5');
-
-                $('#container').empty();
+                var yTick = $('.y_axis g.tick text').eq(1).text();
+                expect(yTick).toBe('10');
             });
             it('should render labels with formatting', function() {
                 var chart = new Nugget.Chart({
@@ -416,7 +417,6 @@ function (
                 tick = $('.x_axis g.tick text').eq(1).text();
 
                 expect(tick).toBe('5');
-                $('#container').empty();
             });
             it('should update ranges when data changes', function() {
                 var chart = new Nugget.Chart({
