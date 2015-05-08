@@ -135,6 +135,14 @@ function (
                     String(d.y_max)
                 ]);
             });
+
+            it('should only render guides that are within the yRange', function() {
+
+            });
+
+            it('should adjust guides on zoom', function() {
+
+            });
         });
     });
 });
