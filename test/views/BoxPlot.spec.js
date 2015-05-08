@@ -28,13 +28,14 @@ function (
         ];
 
         var $svg;
+        var chart;
 
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
             $svg.attr('id', 'container').appendTo('body');
 
             var dataSeries = new Nugget.BoxPlotDataSeries(data);
-            var chart = new Nugget.Chart({
+            chart = new Nugget.Chart({
                 width: 900,
                 height: 500
             });
@@ -49,6 +50,7 @@ function (
 
         afterEach(function() {
             $svg.remove();
+            chart = null;
         });
 
         it('should render the correct amount of boxes', function() {
@@ -136,12 +138,19 @@ function (
                 ]);
             });
 
-            it('should only render guides that are within the yRange', function() {
+            it('should only render guides that are within the yRange on zoom', function() {
+                var zoomY = chart._zooms.zoomY;
+                zoomY.scale(1.5);
+                zoomY.event(chart._d3Svg);
+                expect($('.guide_label').length).toBe(3);
 
-            });
+                zoomY.scale(10);
+                zoomY.event(chart._d3Svg);
+                expect($('.guide_label').length).toBe(0);
 
-            it('should adjust guides on zoom', function() {
-
+                zoomY.scale(1);
+                zoomY.event(chart._d3Svg);
+                expect($('.guide_label').length).toBe(5);
             });
         });
     });

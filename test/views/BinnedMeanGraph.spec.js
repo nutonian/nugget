@@ -11,7 +11,7 @@ function (
         var data = [
             {
                 'num_values': 10,
-                'x_low': 10,
+                'x_low': -10, // intentionally less than visible x range
                 'x_high': 20,
                 'x_mean': 15,
                 'y_mean': 15
@@ -26,7 +26,7 @@ function (
             {
                 'num_values': 30,
                 'x_low': 50,
-                'x_high': 60,
+                'x_high': 100, // intentionally more than visible x range
                 'x_mean': 55,
                 'y_mean': 55
             }
@@ -52,7 +52,7 @@ function (
         });
 
         afterEach(function() {
-            $('#container').remove();
+            $svg.remove();
             chart = null;
         });
 
@@ -90,24 +90,22 @@ function (
         });
 
         describe('guides', function() {
+
+
             it('should show guides for a circle', function() {
-                function validateGuide($el, opts) {
-                    var $text = $el.find('.guide_label');
-                    expect($text.text()).toBe(opts.label.text);
-                    expect(Number($text.attr('x'))).toBeCloseTo(opts.label.x, 0);
-                    expect(Number($text.attr('y'))).toBeCloseTo(opts.label.y, 0);
-
-                    var $bg = $el.find('.guide_label_bg');
-                    expect(Number($bg.attr('x'))).toBeCloseTo(opts.bg.x, 0);
-                    expect(Number($bg.attr('y'))).toBeCloseTo(opts.bg.y, 0);
-                    expect(Number($bg.attr('width'))).toBeCloseTo(opts.bg.width, 0);
-                    expect(Number($bg.attr('height'))).toBeCloseTo(opts.bg.height, 0);
-                }
-
                 var el = $('.bin_circle:eq(1)')[0];
                 Utils.trigger(el, 'mouseenter');
 
-                validateGuide($('.binned_mean_x_range_guide'), {
+                Utils.validateGuide($('.binned_mean_x_guide'), {
+                    line: {
+                        x1: 495,
+                        y1: 244,
+                        x2: 495,
+                        y2: 450
+                    }
+                });
+
+                Utils.validateGuide($('.binned_mean_x_range_guide'), {
                     label: {
                         text: 'From 30 to 40',
                         x: 495,
@@ -118,10 +116,16 @@ function (
                         y: 454,
                         width: 85,
                         height: 15
+                    },
+                    line: {
+                        x1: 405,
+                        y1: 450,
+                        x2: 585,
+                        y2: 450
                     }
                 });
 
-                validateGuide($('.binned_mean_y_guide'), {
+                Utils.validateGuide($('.binned_mean_y_guide'), {
                     label: {
                         text: '35',
                         x: 93,
@@ -132,24 +136,128 @@ function (
                         y: 238,
                         width: 19,
                         height: 15
+                    },
+                    line: {
+                        x1: 100,
+                        y1: 244,
+                        x2: 495,
+                        y2: 244
                     }
                 });
             });
 
             it('should hide guides for a circle', function() {
-
+                var el = $('.bin_circle:eq(1)')[0];
+                Utils.trigger(el, 'mouseenter');
+                expect($('g.binned_mean_guide').length).toBe(3);
+                Utils.trigger(el, 'mouseleave');
+                expect($('g.binned_mean_guide').length).toBe(0);
             });
 
             it('should constrain x range guide to stay within xMin', function() {
-
+                var el = $('.bin_circle:eq(0)')[0];
+                Utils.trigger(el, 'mouseenter');
+                Utils.validateGuide($('.binned_mean_x_range_guide'), {
+                    label: {
+                        text: 'From -10 to 20',
+                        x: 142,
+                        y: 467
+                    },
+                    bg: {
+                        x: 97.5,
+                        y: 454,
+                        width: 89,
+                        height: 15
+                    },
+                    line: {
+                        x1: 100,
+                        y1: 450,
+                        x2: 226,
+                        y2: 450
+                    }
+                });
             });
 
             it('should constrain x range guide to stay within xMax', function() {
-
+                var el = $('.bin_circle:eq(2)')[0];
+                Utils.trigger(el, 'mouseenter');
+                Utils.validateGuide($('.binned_mean_x_range_guide'), {
+                    label: {
+                        text: 'From 50 to 100',
+                        x: 846.625,
+                        y: 467
+                    },
+                    bg: {
+                        x: 800.75,
+                        y: 454,
+                        width: 91.75,
+                        height: 15
+                    },
+                    line: {
+                        x1: 764,
+                        y1: 450,
+                        x2: 890,
+                        y2: 450
+                    }
+                });
             });
 
             it('should adjust guides on zoom', function() {
+                var el = $('.bin_circle:eq(1)')[0];
+                Utils.trigger(el, 'mouseenter');
 
+                var zooms = chart._zooms;
+                var zoomX = zooms.zoomX;
+                var zoomY = zooms.zoomY;
+
+                expect(zoomX.scale()).toBe(1);
+                expect(zoomY.scale()).toBe(1);
+
+                zoomX.scale(1.5);
+                zoomY.scale(1.5);
+
+                zoomX.event(chart._d3Svg);
+                zoomY.event(chart._d3Svg);
+
+                Utils.validateGuide($('.binned_mean_x_range_guide'), {
+                    label: {
+                        text: 'From 30 to 40',
+                        x: 742.5,
+                        y: 467
+                    },
+                    bg: {
+                        x: 700.125,
+                        y: 454,
+                        width: 85,
+                        height: 15
+                    },
+                    line: {
+                        x1: 608,
+                        y1: 450,
+                        x2: 877,
+                        y2: 450
+                    }
+                });
+
+                Utils.validateGuide($('.binned_mean_y_guide'), {
+                    label: {
+                        text: '35',
+                        x: 93,
+                        y: 374
+                    },
+                    bg: {
+                        x: 76.5,
+                        y: 361,
+                        width: 19,
+                        height: 15
+                    },
+                    line: {
+                        x1: 100,
+                        y1: 367,
+                        x2: 742.5,
+                        y2: 367
+                    }
+                });
             });
 
         });

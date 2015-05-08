@@ -1,4 +1,3 @@
-/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -126,11 +125,8 @@ function (
                 chart.add(groupedBars);
                 chart.appendTo('#container');
 
-                // PhantomJS doesn't evaluate css fill correctly :-(
-                if (!Utils.isPhantom()) {
-                    expect($('.legend_swatch:eq(0)').attr('fill')).toBe('rgb(255, 165, 0)');
-                    expect($('.legend_swatch:eq(1)').attr('fill')).toBe('rgb(0, 0, 255)');
-                }
+                expect($('.legend_swatch:eq(0)').attr('fill')).toBe('rgb(255, 165, 0)');
+                expect($('.legend_swatch:eq(1)').attr('fill')).toBe('rgb(0, 0, 255)');
 
                 expect($('.legend_group g:eq(0) text').text()).toBe('bar = 0');
                 expect($('.legend_group g:eq(1) text').text()).toBe('bar = 1');
