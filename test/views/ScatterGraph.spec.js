@@ -39,5 +39,9 @@ function (
 
             expect(renderedHtml.length).toEqual(data.length);
         });
+
+        it('should draw guides', function() {
+
+        });
     });
 });
