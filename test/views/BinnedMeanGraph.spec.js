@@ -148,6 +148,10 @@ function (
 
             });
 
+            it('should adjust guides on zoom', function() {
+
+            });
+
         });
     });
 });
