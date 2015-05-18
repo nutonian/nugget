@@ -430,7 +430,22 @@ function (
 
                 expect(xTicks).toEqual([ '0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50' ]);
                 expect(yTicks).toEqual([ '0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100', '110' ]);
-           });
+            });
+
+            it('should render the specified number of ticks', function() {
+                var chart = new Nugget.Chart({
+                    width: 400,
+                    height: 400,
+                    numXTicks: 0,
+                    numYTicks: 2
+                });
+
+                chart.add(line);
+                chart.appendTo('#container');
+
+                expect($('.x_axis .tick').length).toBe(0);
+                expect($('.y_axis .tick').length).toBe(2);
+            }) ;
        });
 
 
