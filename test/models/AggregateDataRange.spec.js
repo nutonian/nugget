@@ -69,6 +69,59 @@ function (
             expect(scales.y.domain()).toEqual([yMin, yMax]);
         });
 
+        it('should return dummy scales when no data series have been added', function() {
+            var scales = aggregateDataRange.getScales(0, 0);
+            expect(scales.x).toBeDefined();
+            expect(scales.y).toBeDefined();
+        });
+
+        it('should not include ignored data series axes values in overall range calculations', function() {
+            function getDomain(axis) {
+                return aggregateDataRange.getScales([0, 100], [0, 100])[axis].domain();
+            }
+
+            // Ignore none
+            aggregateDataRange.addDataSeries(
+                new Nugget.NumericalDataSeries([{x_value: 0, y_value: 0 }])
+            );
+            expect(getDomain('x')).toEqual([0, 0]);
+            expect(getDomain('y')).toEqual([0, 0]);
+
+            // Ignore X
+            aggregateDataRange.addDataSeries(
+                new Nugget.NumericalDataSeries([{x_value: -100, y_value: 100 }], {
+                    ignoreXRange: true
+                })
+            );
+            expect(getDomain('x')).toEqual([0, 0]);
+            expect(getDomain('y')).toEqual([0, 100]);
+
+            // Ignore Y
+            aggregateDataRange.addDataSeries(
+                new Nugget.NumericalDataSeries([{x_value: 100, y_value: -100 }], {
+                    ignoreYRange: true
+                })
+            );
+            expect(getDomain('x')).toEqual([0, 100]);
+            expect(getDomain('y')).toEqual([0, 100]);
+
+            // Ignore X + Y
+            aggregateDataRange.addDataSeries(
+                new Nugget.NumericalDataSeries([{x_value: -500, y_value: 500 }], {
+                    ignoreXRange: true,
+                    ignoreYRange: true
+                })
+            );
+            expect(getDomain('x')).toEqual([0, 100]);
+            expect(getDomain('y')).toEqual([0, 100]);
+
+            // Ignore none
+            aggregateDataRange.addDataSeries(
+                new Nugget.NumericalDataSeries([{x_value: -100, y_value: -100 }])
+            );
+            expect(getDomain('x')).toEqual([-100, 100]);
+            expect(getDomain('y')).toEqual([-100, 100]);
+        });
     });
 
 });
