@@ -67,6 +67,29 @@ function (
             expect($('.box_plot_guide').length).toBe(0);
         });
 
+        it('should align boxes with x axis ticks', function() {
+            var $xTicks = $('.x_axis .tick');
+            var $centerLines = $('.box_plot line.range');
+
+            var tick1Translate = $xTicks.first().attr('transform');
+            var tick2Translate = $xTicks.last().attr('transform');
+
+            function extractXFromTranslate(str) {
+                var regex = /translate\((.*),/g;
+                var array = regex.exec(str);
+                return array[1];
+            }
+
+            var tick1X = extractXFromTranslate(tick1Translate);
+            var tick2X = extractXFromTranslate(tick2Translate);
+
+            var center1X = $centerLines.first().attr('x1');
+            var center2X = $centerLines.last().attr('x1');
+
+            expect(tick1X).toBeCloseTo(center1X, 1);
+            expect(tick2X).toBeCloseTo(center2X, 1);
+        });
+
         describe('guides', function() {
             var el;
 
