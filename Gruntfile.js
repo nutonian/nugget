@@ -25,7 +25,8 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: true,
-                modules: 'amd'
+                modules: 'amd',
+                blacklist: 'useStrict'
             },
             dist: {
                 files: [{
