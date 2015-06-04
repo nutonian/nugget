@@ -85,7 +85,7 @@ function (
         });
 
         it('should render a legend', function() {
-            expect($svg.find('.legend_circle').attr('r')).toBe('10');
+            expect($svg.find('.legend_swatch').attr('r')).toBe('10');
             expect($svg.find('.legend_label').text()).toBe('approx. 6 values');
         });
 
