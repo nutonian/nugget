@@ -58,14 +58,14 @@ function (
 
         it('should plot circles', function() {
             var expectedVals = [
-                {'r': '5',  'cx': 136, 'cy': 418 },
-                {'r': '17.5',  'cx': 495, 'cy': 244 },
-                {'r': '30', 'cx': 853, 'cy': 69 }
+                { r: 13, cx: 136, cy: 418 },
+                { r: 21, cx: 495, cy: 244 },
+                { r: 30, cx: 853, cy: 69  }
             ];
             var actualVals = $svg.find('.bin_circle').map(function() {
                 var $circle = $(this);
                 var attrs = {
-                    r: $circle.attr('r'),
+                    r:  Math.floor( $circle.attr('r')  ),
                     cx: Math.floor( $circle.attr('cx') ),
                     cy: Math.floor( $circle.attr('cy') )
                 };
@@ -86,7 +86,7 @@ function (
 
         it('should render a legend', function() {
             expect($svg.find('.legend_circle').attr('r')).toBe('10');
-            expect($svg.find('.legend_label').text()).toBe('approx. 14 values');
+            expect($svg.find('.legend_label').text()).toBe('approx. 6 values');
         });
 
         describe('guides', function() {
