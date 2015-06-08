@@ -15,6 +15,51 @@ function (
         var svgWidth = 300;
         var svgHeight = 100;
 
+        var labelY = (svgHeight / 2) + 1;
+
+        function validateRectSwatch(idx, opts) {
+            var $group = $('.legend_group').eq(idx);
+            var $rect = $group.find('rect');
+
+            expect(Number($rect.attr('x'))).toBeCloseTo(opts.swatch.x, 0);
+            expect(Number($rect.attr('y'))).toBeCloseTo(opts.swatch.y, 0);
+            expect(Number($rect.attr('width'))).toBeCloseTo(opts.swatch.width, 0);
+            expect(Number($rect.attr('height'))).toBeCloseTo(opts.swatch.height, 0);
+            expect($rect.attr('fill')).toBe(opts.swatch.fill);
+
+            validateLabel($group, opts);
+        }
+
+        function validateCircleSwatch(idx, opts) {
+            var $group = $('.legend_group').eq(idx);
+            var $circle = $group.find('circle');
+
+            expect(Number($circle.attr('cx'))).toBeCloseTo(opts.swatch.cx, 0);
+            expect(Number($circle.attr('cy'))).toBeCloseTo(opts.swatch.cy, 0);
+            expect(Number($circle.attr('r'))).toBeCloseTo(opts.swatch.radius, 0);
+            expect($circle.attr('fill')).toBe(opts.swatch.fill);
+
+            validateLabel($group, opts);
+        }
+
+        function validatePathSwatch(idx, opts) {
+            var $group = $('.legend_group').eq(idx);
+            var $path  = $group.find('path');
+
+            expect($path.attr('d')).toEqual(opts.swatch.data);
+            expect($path.attr('fill')).toEqual(opts.swatch.fill);
+
+            validateLabel($group, opts);
+        }
+
+        function validateLabel($group, opts) {
+            var $label = $group.find('text');
+
+            expect(Number($label.attr('x'))).toBeCloseTo(opts.label.x, 0);
+            expect(Number($label.attr('y'))).toBeCloseTo(opts.label.y, 0);
+            expect($label.text()).toBe(opts.label.text);
+        }
+
         beforeEach(function() {
             view = new Nugget.LegendView();
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
@@ -29,22 +74,6 @@ function (
         afterEach(function() {
             $svg.remove();
         });
-
-        function validateRectSwatch(idx, opts) {
-            var $group = $('.legend_group').eq(idx);
-            var $rect = $group.find('rect');
-            var $label = $group.find('text');
-
-            expect(Number($rect.attr('x'))).toBeCloseTo(opts.swatch.x, 0);
-            expect(Number($rect.attr('y'))).toBeCloseTo(opts.swatch.y, 0);
-            expect(Number($rect.attr('width'))).toBeCloseTo(opts.swatch.width, 0);
-            expect(Number($rect.attr('height'))).toBeCloseTo(opts.swatch.height, 0);
-            expect($rect.attr('fill')).toBe(opts.swatch.fill);
-
-            expect(Number($label.attr('x'))).toBeCloseTo(opts.label.x, 0);
-            expect(Number($label.attr('y'))).toBeCloseTo(opts.label.y, 0);
-            expect($label.text()).toBe(opts.label.text);
-        }
 
         it('should draw a legend with rectangular swatches', function() {
             var widthOverride = 10;
@@ -65,7 +94,7 @@ function (
                 },
                 label: {
                     x: 34,
-                    y: svgHeight / 2,
+                    y: labelY,
                     text: 'creamsicle'
                 }
             });
@@ -80,26 +109,11 @@ function (
                 },
                 label: {
                     x: 124,
-                    y: svgHeight / 2,
+                    y: labelY,
                     text: 'sizzurp'
                 }
             });
         });
-
-        function validateCircleSwatch(idx, opts) {
-            var $group = $('.legend_group').eq(idx);
-            var $circle = $group.find('circle');
-            var $label = $group.find('text');
-
-            expect(Number($circle.attr('cx'))).toBeCloseTo(opts.swatch.cx, 0);
-            expect(Number($circle.attr('cy'))).toBeCloseTo(opts.swatch.cy, 0);
-            expect(Number($circle.attr('r'))).toBeCloseTo(opts.swatch.radius, 0);
-            expect($circle.attr('fill')).toBe(opts.swatch.fill);
-
-            expect(Number($label.attr('x'))).toBeCloseTo(opts.label.x, 0);
-            expect(Number($label.attr('y'))).toBeCloseTo(opts.label.y, 0);
-            expect($label.text()).toBe(opts.label.text);
-        }
 
         it('should draw a legend with circular swatches', function() {
             var radiusOverride = 10;
@@ -118,7 +132,7 @@ function (
                 },
                 label: {
                     x: 34,
-                    y: svgHeight / 2,
+                    y: labelY,
                     text: 'creamsicle'
                 }
             });
@@ -132,7 +146,38 @@ function (
                 },
                 label: {
                     x: 134,
-                    y: svgHeight / 2,
+                    y: labelY,
+                    text: 'sizzurp'
+                }
+            });
+        });
+
+        it('should draw a legend with path swatches', function() {
+            view.draw(d3El, [
+                {color: 'orange', label: 'creamsicle', shape: 'path', points: [{x: 0,  y: 0}, {x: 10, y: 10}]},
+                {color: 'purple', label: 'sizzurp',    shape: 'path', points: [{x: 10, y: 0}, {x: 0,  y: 10}]},
+            ]);
+
+            validatePathSwatch(0, {
+                swatch: {
+                    data: 'M10,0L20,10',
+                    fill: 'orange'
+                },
+                label: {
+                    x: 30,
+                    y: labelY,
+                    text: 'creamsicle'
+                }
+            });
+
+            validatePathSwatch(1, {
+                swatch: {
+                    data: 'M109.859375,0L99.859375,10',
+                    fill: 'purple'
+                },
+                label: {
+                    x: 120,
+                    y: labelY,
                     text: 'sizzurp'
                 }
             });
@@ -141,7 +186,8 @@ function (
         it('should draw a legend with mixed swatches', function() {
             view.draw(d3El, [
                 {color: 'orange', label: 'creamsicle', shape: 'rect'},
-                {color: 'purple', label: 'sizzurp',    shape: 'circle'}
+                {color: 'purple', label: 'sizzurp',    shape: 'circle'},
+                {color: 'green',  label: 'dank',       shape: 'path', points: [{x: 0,  y: 0}, {x: 10, y: 10}]}
             ]);
 
             validateRectSwatch(0, {
@@ -154,7 +200,7 @@ function (
                 },
                 label: {
                     x: 34,
-                    y: svgHeight / 2,
+                    y: labelY,
                     text: 'creamsicle'
                 }
             });
@@ -168,8 +214,20 @@ function (
                 },
                 label: {
                     x: 128,
-                    y: svgHeight / 2,
+                    y: labelY,
                     text: 'sizzurp'
+                }
+            });
+
+            validatePathSwatch(2, {
+                swatch: {
+                    data: 'M178.296875,0L188.296875,10',
+                    fill: 'green'
+                },
+                label: {
+                    x: 198,
+                    y: labelY,
+                    text: 'dank'
                 }
             });
         });
