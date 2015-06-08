@@ -7,7 +7,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Box Plot Tests', function () {
+    describe('BoxPlot', function () {
         var data = [
             {
                 x_value: '0',
