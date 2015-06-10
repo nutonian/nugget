@@ -40,7 +40,8 @@ function (
             $svg.attr('id', 'container').appendTo('body');
             chart = new Nugget.Chart({
                 width: 900,
-                height: 500
+                height: 500,
+                legend: true
             });
             var dataSeries = new Nugget.BinnedMeanDataSeries(data);
             var binnedMeanGraph = new Nugget.BinnedMeanGraph({

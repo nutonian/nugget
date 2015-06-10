@@ -95,7 +95,7 @@ function (
                 }).toArray();
 
                 expect(xAxisTicks).toEqual(['A', 'B', 'C', 'D', 'E', 'F']);
-                expect(yAxisTicks).toEqual(['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22']);
+                expect(yAxisTicks).toEqual([ '0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20' ]);
             });
 
             it('should render a legend', function() {
@@ -113,7 +113,8 @@ function (
                     axisLabels: {
                         x: ['foo', 'bar'],
                         y: 'baz'
-                    }
+                    },
+                    legend: true
                 });
 
                 var dataSeries = new Nugget.OrdinalDataSeries(dataArray);

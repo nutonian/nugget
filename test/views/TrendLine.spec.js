@@ -6,7 +6,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Trend Line Tests', function () {
+    describe('TrendLine', function () {
         var $svg;
         var chart;
         var dataSeries;
@@ -55,8 +55,8 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(297);
-            expect(parseInt(y2, 0)).toBe(157);
+            expect(parseInt(y1, 0)).toBe(306);
+            expect(parseInt(y2, 0)).toBe(140);
         });
         it('should render a flat trendline', function() {
             var trendline = new Nugget.TrendLine({
@@ -78,8 +78,8 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(339);
-            expect(parseInt(y2, 0)).toBe(339);
+            expect(parseInt(y1, 0)).toBe(356);
+            expect(parseInt(y2, 0)).toBe(356);
         });
         it('should render a negative trendline', function() {
             var trendline = new Nugget.TrendLine({
@@ -101,8 +101,8 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(333);
-            expect(parseInt(y2, 0)).toBe(473);
+            expect(parseInt(y1, 0)).toBe(348);
+            expect(parseInt(y2, 0)).toBe(514);
         });
     });
 });
