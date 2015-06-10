@@ -115,11 +115,11 @@ function (
                 }).toArray();
 
                 expect(bgData).toEqual([
-                    {'x': '83.5', 'y': '435.34375', 'width': '12', 'height': '15'},
-                    {'x': '76.5', 'y': '339.96875', 'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '240.625',   'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '141.28125', 'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '45.921875', 'width': '19', 'height': '15'}
+                    {'x':'83.5', 'y':'434.421875', 'width':'12', 'height':'15'},
+                    {'x':'76.5', 'y':'328.90625' , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'219'       , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'109.078125', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'3.5625'    , 'width':'19', 'height':'15'}
                 ]);
             });
 
@@ -169,7 +169,7 @@ function (
 
                 zoomY.scale(10);
                 zoomY.event(chart._d3Svg);
-                expect($('.guide_label').length).toBe(0);
+                expect($('.guide_label').length).toBe(1);
 
                 zoomY.scale(1);
                 zoomY.event(chart._d3Svg);

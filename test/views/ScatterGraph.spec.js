@@ -7,7 +7,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Scatter Plot Tests', function () {
+    describe('ScatterGraph', function () {
         var data = [
             {x_value: 0,  y_value: 10},
             {x_value: 1,  y_value: 16},
@@ -77,7 +77,7 @@ function (
                 },
                 line: {
                     x1: 381,
-                    y1: 96,
+                    y1: 67,
                     x2: 381,
                     y2: 250
                 }
@@ -89,19 +89,19 @@ function (
                 label: {
                     text: String(point.y_value),
                     x: 93,
-                    y: 103
+                    y: 74
                 },
                 bg: {
                     x: 76.5,
-                    y: 90,
+                    y: 61,
                     width: 19,
                     height: 15
                 },
                 line: {
                     x1: 100,
-                    y1: 96,
+                    y1: 67,
                     x2: 381,
-                    y2: 96
+                    y2: 67
                 }
             });
         });
@@ -153,11 +153,11 @@ function (
                 label: {
                     text: String(point.y_value),
                     x: 93,
-                    y: 326
+                    y: 316
                 },
                 bg: {
                     x: 76.5,
-                    y: 313,
+                    y: 303,
                     width: 19,
                     height: 15
                 },

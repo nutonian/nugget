@@ -44,7 +44,7 @@ function (
 
             var $plotline = $('path.line');
 
-            var expectedPoints = ['M109.51219512195122', 51, 441, 51];
+            var expectedPoints = ['M109.51219512195122', 9, 440, 9];
             var actualPoints = $plotline.attr('d').split(',');
 
             expect($plotline.length).toBe(1);
