@@ -140,7 +140,43 @@ function (
             expect(newYDomain).toEqual([ 11.822222222222221, 20.177777777777777 ]);
         });
 
+        it('should create custom scales', function() {
+            var chart = new Nugget.Chart({
+                margins: {
+                    top: 0, right: 0, bottom: 0, left: 0
+                },
+                padding: 0,
+                width: 100,
+                height: 100
+            });
+            var dataSeries = new Nugget.NumericalDataSeries(lineGraphData1);
+            var lineGraph = new Nugget.LineGraph({
+                dataSeries: dataSeries
+            });
+            chart.add(lineGraph);
 
+            var xMin = 0;
+            var xMax = 1;
+            var yMin = 2;
+            var yMax = 3;
+
+            chart.createScales = function(xScreenRange, yScreenRange) {
+                var xScale = d3.scale.linear().domain([xMin, xMax]);
+                var yScale = d3.scale.linear().domain([yMin, yMax]);
+
+                var scales = {
+                    x: xScale.range(xScreenRange),
+                    y: yScale.range(yScreenRange)
+                };
+
+                return scales;
+            };
+
+            chart.appendTo('#container');
+
+            expect(chart._xRange.domain()).toEqual([xMin, xMax]);
+            expect(chart._yRange.domain()).toEqual([yMin, yMax]);
+        });
 
         describe('Box zoom', function() {
             var chart;
