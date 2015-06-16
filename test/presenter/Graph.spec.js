@@ -91,11 +91,11 @@ define([
                             label: {
                                 text: '50',
                                 x: 495,
-                                y: 467
+                                y: 466
                             },
                             bg: {
                                 x: 485.5,
-                                y: 454,
+                                y: 454.5,
                                 width: 19,
                                 height: 15
                             },
@@ -135,7 +135,7 @@ define([
                             },
                             bg: {
                                 x: 76.5,
-                                y: 219,
+                                y: 220.5,
                                 width: 19,
                                 height: 15
                             },
@@ -172,11 +172,11 @@ define([
                             label: {
                                 text: xLow + '',
                                 x: 109,
-                                y: 467
+                                y: 466
                             },
                             bg: {
                                 x: 97.5,
-                                y: 454,
+                                y: 454.5,
                                 width: 24,
                                 height: 15
                             },
@@ -213,11 +213,11 @@ define([
                             label: {
                                 text: xHigh + '',
                                 x: 879.5,
-                                y: 467
+                                y: 466
                             },
                             bg: {
                                 x: 866.5,
-                                y: 454,
+                                y: 454.5,
                                 width: 26,
                                 height: 15
                             },

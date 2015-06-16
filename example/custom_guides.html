@@ -1,0 +1,132 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+    <style>
+        .svg_container {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Scatter plot in Nugget</h4>
+<div class="svg_container">
+    <svg id="container" width="100%" height="100%"></svg>
+</div>
+<script>
+    require.config({
+        baseUrl: '/build'
+    });
+
+    require(['Nugget'], function (Nugget) {
+
+        var chart = new Nugget.Chart();
+
+        var dataSeries1 = new Nugget.NumericalDataSeries([
+            {x_value: 0,   y_value: 0},
+            {x_value: 50,  y_value: 60},
+            {x_value: 100, y_value: 60}
+        ]);
+        var lineGraph1 = new Nugget.LineGraph({
+            dataSeries: dataSeries1,
+            color: 'rgb(97, 156, 231)'
+        });
+
+        var dataSeries2 = new Nugget.NumericalDataSeries([
+            {x_value: 0,   y_value: 100},
+            {x_value: 50,  y_value: 40},
+            {x_value: 100, y_value: 40}
+        ]);
+        var lineGraph2 = new Nugget.LineGraph({
+            dataSeries: dataSeries2,
+            color: 'rgb(200, 34, 246)'
+        });
+
+        var dataSeries3 = new Nugget.NumericalDataSeries([
+            {x_value: 0,   y_value: 50},
+            {x_value: 100, y_value: 50}
+        ]);
+        var lineGraph3 = new Nugget.LineGraph({
+            dataSeries: dataSeries3,
+            color: 'rgb(26, 200, 185)'
+        });
+
+        chart.add(lineGraph1);
+        chart.add(lineGraph2);
+        chart.add(lineGraph3);
+
+        chart.addGuideLayer({
+            init: function(guideEl, chartOpts) {
+                var d3Svg   = chartOpts.d3Svg;
+                var margins = chartOpts.margins;
+                var padding = chartOpts.padding;
+                var width   = chartOpts.width;
+                var height  = chartOpts.height;
+
+                var xGuide;
+
+                var circles = [];
+
+                var yRange1, yRange2, yRange3;
+
+                function removeGuides() {
+                    xGuide.remove();
+                    xGuide = null;
+
+                    while (circles.length > 0) {
+                        var circle = circles.pop();
+                        circle.remove();
+                        circle = null;
+                    }
+                }
+
+                var self = this;
+                d3Svg.on('mousemove.guides', function() {
+                    if (!xGuide) {
+                        xGuide = guideEl.append('line').attr('stroke', 'grey');
+                        circles.push( guideEl.append('circle').attr('fill', lineGraph1.color).attr('r', 5) );
+                        circles.push( guideEl.append('circle').attr('fill', lineGraph2.color).attr('r', 5) );
+                        circles.push( guideEl.append('circle').attr('fill', lineGraph3.color).attr('r', 5) );
+                    }
+
+                    var mouse = d3.mouse(this);
+                    var x = mouse[0];
+                    var y = mouse[1];
+
+                    xGuide
+                        .attr('x1', x)
+                        .attr('y1', margins.top)
+                        .attr('x2', x)
+                        .attr('y2', height - margins.bottom);
+
+                    var paths = document.querySelectorAll('path.line');
+
+                    circles.forEach(function(circle, i) {
+                        circle
+                            .attr('cx', x)
+                            .attr('cy', function() {
+                                var path = paths[i];
+                                return self.getPathY(x, path);
+                            });
+                    });
+
+                    // removal code
+                    if (x < margins.left + padding ||
+                        x > width - margins.right - padding) {
+                        removeGuides();
+                    }
+                });
+            }
+        });
+
+        chart.appendTo('#container');
+    });
+</script>
+</body>
+</html>
