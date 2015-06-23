@@ -67,11 +67,11 @@ function (
                 label: {
                     text: String(point.x_value),
                     x: 383,
-                    y: 267
+                    y: 266
                 },
                 bg: {
                     x: 373.5,
-                    y: 254,
+                    y: 254.5,
                     width: 19,
                     height: 15
                 },
@@ -93,7 +93,7 @@ function (
                 },
                 bg: {
                     x: 76.5,
-                    y: 61,
+                    y: 62.625,
                     width: 19,
                     height: 15
                 },
@@ -131,11 +131,11 @@ function (
                 label: {
                     text: String(point.x_value),
                     x: 352,
-                    y: 267
+                    y: 266
                 },
                 bg: {
                     x: 346,
-                    y: 254,
+                    y: 254.5,
                     width: 12,
                     height: 15
                 },
@@ -157,7 +157,7 @@ function (
                 },
                 bg: {
                     x: 76.5,
-                    y: 303,
+                    y: 304.5,
                     width: 19,
                     height: 15
                 },

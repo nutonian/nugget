@@ -107,11 +107,11 @@ function (
                     label: {
                         text: 'From 30 to 40',
                         x: 495,
-                        y: 467
+                        y: 466
                     },
                     bg: {
                         x: 453,
-                        y: 454,
+                        y: 454.5,
                         width: 85,
                         height: 15
                     }
@@ -134,7 +134,7 @@ function (
                     },
                     bg: {
                         x: 76.5,
-                        y: 238,
+                        y: 240,
                         width: 19,
                         height: 15
                     },
@@ -162,11 +162,11 @@ function (
                     label: {
                         text: 'From -10 to 20',
                         x: 142,
-                        y: 467
+                        y: 466
                     },
                     bg: {
                         x: 97.5,
-                        y: 454,
+                        y: 454.5,
                         width: 89,
                         height: 15
                     }
@@ -188,11 +188,11 @@ function (
                     label: {
                         text: 'From 50 to 100',
                         x: 846.625,
-                        y: 467
+                        y: 466
                     },
                     bg: {
                         x: 800.75,
-                        y: 454,
+                        y: 454.5,
                         width: 91.75,
                         height: 15
                     }
@@ -228,11 +228,11 @@ function (
                     label: {
                         text: 'From 30 to 40',
                         x: 742.5,
-                        y: 467
+                        y: 466
                     },
                     bg: {
                         x: 700.125,
-                        y: 454,
+                        y: 454.5,
                         width: 85,
                         height: 15
                     }
@@ -254,7 +254,7 @@ function (
                     },
                     bg: {
                         x: 76.5,
-                        y: 361,
+                        y: 362,
                         width: 19,
                         height: 15
                     },

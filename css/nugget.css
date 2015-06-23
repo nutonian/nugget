@@ -53,11 +53,6 @@
     fill: rgba(0, 100, 255, 0.5);
 }
 
-path.line {
-    stroke: #f90;
-    stroke-width: 2;
-}
-
 .guide_line {
     pointer-events: none;
     stroke: #aaa;
