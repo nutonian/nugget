@@ -32,13 +32,13 @@ function (
         it('should reuse it\'s d3Svg on subsequent appendTo calls', function() {
             var chart = new Nugget.Chart();
             chart.add(line);
-            expect(chart._d3Svg).toBeFalsy();
+            expect(chart.d3Svg).toBeFalsy();
 
             chart.appendTo('#container');
-            var d3Svg = chart._d3Svg;
+            var d3Svg = chart.d3Svg;
 
             chart.appendTo('#container');
-            expect(d3Svg).toBe(chart._d3Svg);
+            expect(d3Svg).toBe(chart.d3Svg);
         });
 
         it('should remove a child element and then reset itself', function() {
@@ -123,8 +123,8 @@ function (
 
             chart.appendTo('#container');
 
-            var currentXDomain = chart._xRange.domain();
-            var currentYDomain = chart._yRange.domain();
+            var currentXDomain = chart.xRange.domain();
+            var currentYDomain = chart.yRange.domain();
 
             expect(currentXDomain).toEqual([ -1.282051282051282, 51.28205128205128 ]);
             expect(currentYDomain).toEqual([ -2.2222222222222223, 102.22222222222221 ]);
@@ -133,8 +133,8 @@ function (
 
             dataSeries.setData(newdata);
 
-            var newXDomain = chart._xRange.domain();
-            var newYDomain = chart._yRange.domain();
+            var newXDomain = chart.xRange.domain();
+            var newYDomain = chart.yRange.domain();
 
             expect(newXDomain).toEqual([ 2.974358974358974, 4.0256410256410255 ]);
             expect(newYDomain).toEqual([ 11.822222222222221, 20.177777777777777 ]);
@@ -174,8 +174,8 @@ function (
 
             chart.appendTo('#container');
 
-            expect(chart._xRange.domain()).toEqual([xMin, xMax]);
-            expect(chart._yRange.domain()).toEqual([yMin, yMax]);
+            expect(chart.xRange.domain()).toEqual([xMin, xMax]);
+            expect(chart.yRange.domain()).toEqual([yMin, yMax]);
         });
 
         describe('Guide Layer', function(done) {
@@ -241,8 +241,8 @@ function (
 
             function getDomains() {
                 var domains = {
-                    x: chart._xRange.domain(),
-                    y: chart._yRange.domain()
+                    x: chart.xRange.domain(),
+                    y: chart.yRange.domain()
                };
                 return domains;
             }
@@ -389,8 +389,8 @@ function (
                 chartWithLegend.add(line);
                 chartWithLegend.appendTo('#container');
 
-                var noLegendYRangeMax = chart._yRange.domain()[1];
-                var legendYRangeMax = chartWithLegend._yRange.domain()[1];
+                var noLegendYRangeMax = chart.yRange.domain()[1];
+                var legendYRangeMax = chartWithLegend.yRange.domain()[1];
 
                 expect(legendYRangeMax).toBeGreaterThan(noLegendYRangeMax);
             });

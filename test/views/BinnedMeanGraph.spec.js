@@ -211,7 +211,7 @@ function (
                 var el = $('.bin_circle:eq(1)')[0];
                 Utils.trigger(el, 'mouseenter');
 
-                var zooms = chart._zooms;
+                var zooms = chart.zooms;
                 var zoomX = zooms.zoomX;
                 var zoomY = zooms.zoomY;
 
@@ -221,8 +221,8 @@ function (
                 zoomX.scale(1.5);
                 zoomY.scale(1.5);
 
-                zoomX.event(chart._d3Svg);
-                zoomY.event(chart._d3Svg);
+                zoomX.event(chart.d3Svg);
+                zoomY.event(chart.d3Svg);
 
                 Utils.validateGuide($('.binned_mean_x_guide'), {
                     label: {

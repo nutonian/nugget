@@ -112,7 +112,7 @@ function (
             var pointEl = $('.point:eq('+ idx +')')[0];
             Utils.trigger(pointEl, 'mouseenter');
 
-            var zooms = chart._zooms;
+            var zooms = chart.zooms;
             var zoomX = zooms.zoomX;
             var zoomY = zooms.zoomY;
 
@@ -122,8 +122,8 @@ function (
             zoomX.scale(1.5);
             zoomY.scale(1.5);
 
-            zoomX.event(chart._d3Svg);
-            zoomY.event(chart._d3Svg);
+            zoomX.event(chart.d3Svg);
+            zoomY.event(chart.d3Svg);
 
             // X Guide
             Utils.validateGuide($('.scatter_plot_guides'), {
