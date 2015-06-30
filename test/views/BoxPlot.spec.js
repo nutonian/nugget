@@ -162,17 +162,17 @@ function (
             });
 
             it('should only render guides that are within the yRange on zoom', function() {
-                var zoomY = chart._zooms.zoomY;
+                var zoomY = chart.zooms.zoomY;
                 zoomY.scale(1.5);
-                zoomY.event(chart._d3Svg);
+                zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(3);
 
                 zoomY.scale(10);
-                zoomY.event(chart._d3Svg);
+                zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(1);
 
                 zoomY.scale(1);
-                zoomY.event(chart._d3Svg);
+                zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(5);
             });
         });

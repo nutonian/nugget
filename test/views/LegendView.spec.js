@@ -15,7 +15,7 @@ function (
         var svgWidth = 300;
         var svgHeight = 100;
 
-        var labelY = (svgHeight / 2) + 1;
+        var labelY = (svgHeight / 2) + 5;
 
         function validateRectSwatch(idx, opts) {
             var $group = $('.legend_group').eq(idx);
