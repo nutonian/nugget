@@ -178,6 +178,17 @@ function (
             expect(chart.yRange.domain()).toEqual([yMin, yMax]);
         });
 
+        it('should enable zoom after user clicks on the main svg element', function() {
+            var chart = new Nugget.Chart();
+            var spy = spyOn(chart, '_enableZooming');
+
+            chart.appendTo('#container');
+            expect(spy).not.toHaveBeenCalled();
+
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).toHaveBeenCalled();
+        });
+
         describe('Guide Layer', function(done) {
             it('should add a custom guide layer', function(done) {
                 var chart = new Nugget.Chart();
