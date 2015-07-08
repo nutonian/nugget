@@ -254,7 +254,7 @@ function (
                 var domains = {
                     x: chart.xRange.domain(),
                     y: chart.yRange.domain()
-               };
+                };
                 return domains;
             }
 
