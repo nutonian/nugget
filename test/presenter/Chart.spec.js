@@ -7,7 +7,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Chart tests', function() {
+    describe('Chart', function() {
         var $svg;
 
         var lineGraphData1 = [{x_value: 0, y_value: 0},   {x_value: 50, y_value: 50}, {x_value: 0, y_value: 100}];
@@ -32,13 +32,13 @@ function (
         it('should reuse it\'s d3Svg on subsequent appendTo calls', function() {
             var chart = new Nugget.Chart();
             chart.add(line);
-            expect(chart._d3Svg).toBeFalsy();
+            expect(chart.d3Svg).toBeFalsy();
 
             chart.appendTo('#container');
-            var d3Svg = chart._d3Svg;
+            var d3Svg = chart.d3Svg;
 
             chart.appendTo('#container');
-            expect(d3Svg).toBe(chart._d3Svg);
+            expect(d3Svg).toBe(chart.d3Svg);
         });
 
         it('should remove a child element and then reset itself', function() {
@@ -80,9 +80,12 @@ function (
             var newMap = chart._childElementMap.size;
             expect(newMap).toBe(1);
             expect(line1.path).toBeUndefined();
-       });
+        });
 
-
+        it('should appendTo without any Graphs added', function() {
+            var chart = new Nugget.Chart();
+            expect(function() { chart.appendTo('#container'); }).not.toThrow();
+        });
 
         it('should draw dotted grid lines', function() {
             var width = 900;
@@ -106,39 +109,6 @@ function (
             expect(yAxisTick.attributes['x2'].value).toBe((width - (chart.margins.left + chart.margins.right)) +'');
         });
 
-        it('should render x/y guides at the mouse position', function() {
-            var chart = new Nugget.Chart({
-                width: 900,
-                height: 500,
-                guides: true
-            });
-            chart.add(line);
-            chart.appendTo('#container');
-
-            var mouseTargetEl = document.querySelectorAll('#container .mouse_target')[0];
-            var event = document.createEvent('Event');
-            event.initEvent('mousemove');
-            event.clientX = event.pageX = 210;
-            event.clientY = event.pageY = 200;
-            mouseTargetEl.dispatchEvent(event);
-
-            var xAxisGuide = document.querySelectorAll('#container .x_axis_guide')[0];
-            expect(xAxisGuide.attributes.x1.value).toBeCloseTo(202, 1);
-            expect(xAxisGuide.attributes.x2.value).toBeCloseTo(202, 1);
-            expect(xAxisGuide.attributes.y1.value).toBeCloseTo(127, 1);
-
-            var xAxisLabel = document.querySelectorAll('#container .x_axis_guide_label')[0];
-            expect(xAxisLabel.innerHTML).toBe('6');
-
-            var yAxisGuide = document.querySelectorAll('#container .y_axis_guide')[0];
-            expect(yAxisGuide.attributes.x2.value).toBeCloseTo(202, 1);
-            expect(yAxisGuide.attributes.y1.value).toBeCloseTo(127, 1);
-            expect(yAxisGuide.attributes.y2.value).toBeCloseTo(127, 1);
-
-            var yAxisLabel = document.querySelectorAll('#container .y_axis_guide_label')[0];
-            expect(yAxisLabel.innerHTML).toBe('81');
-       });
-
         it('should update ranges when data changes', function() {
             var chart = new Nugget.Chart({
                 width: 500,
@@ -153,23 +123,115 @@ function (
 
             chart.appendTo('#container');
 
-            var currentXDomain = chart._xRange.domain();
-            var currentYDomain = chart._yRange.domain();
+            var currentXDomain = chart.xRange.domain();
+            var currentYDomain = chart.yRange.domain();
 
             expect(currentXDomain).toEqual([ -1.282051282051282, 51.28205128205128 ]);
-            expect(currentYDomain).toEqual([ -2.2222222222222223, 113.33333333333333 ]);
+            expect(currentYDomain).toEqual([ -2.2222222222222223, 102.22222222222221 ]);
 
             var newdata = [{x_value: 3, y_value:12}, {x_value: 4, y_value: 20}];
 
             dataSeries.setData(newdata);
 
-            var newXDomain = chart._xRange.domain();
-            var newYDomain = chart._yRange.domain();
+            var newXDomain = chart.xRange.domain();
+            var newYDomain = chart.yRange.domain();
 
             expect(newXDomain).toEqual([ 2.974358974358974, 4.0256410256410255 ]);
-            expect(newYDomain).toEqual([ 11.822222222222221, 21.066666666666663 ]);
+            expect(newYDomain).toEqual([ 11.822222222222221, 20.177777777777777 ]);
         });
 
+        it('should create custom scales', function() {
+            var chart = new Nugget.Chart({
+                margins: {
+                    top: 0, right: 0, bottom: 0, left: 0
+                },
+                padding: 0,
+                width: 100,
+                height: 100
+            });
+            var dataSeries = new Nugget.NumericalDataSeries(lineGraphData1);
+            var lineGraph = new Nugget.LineGraph({
+                dataSeries: dataSeries
+            });
+            chart.add(lineGraph);
+
+            var xMin = 0;
+            var xMax = 1;
+            var yMin = 2;
+            var yMax = 3;
+
+            chart.createScales = function(xScreenRange, yScreenRange) {
+                var xScale = d3.scale.linear().domain([xMin, xMax]);
+                var yScale = d3.scale.linear().domain([yMin, yMax]);
+
+                var scales = {
+                    x: xScale.range(xScreenRange),
+                    y: yScale.range(yScreenRange)
+                };
+
+                return scales;
+            };
+
+            chart.appendTo('#container');
+
+            expect(chart.xRange.domain()).toEqual([xMin, xMax]);
+            expect(chart.yRange.domain()).toEqual([yMin, yMax]);
+        });
+
+        it('should enable zoom after user clicks on the main svg element', function() {
+            var chart = new Nugget.Chart();
+            var spy = spyOn(chart, '_enableZooming');
+
+            chart.appendTo('#container');
+            expect(spy).not.toHaveBeenCalled();
+
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).toHaveBeenCalled();
+        });
+
+        describe('Guide Layer', function(done) {
+            it('should add a custom guide layer', function(done) {
+                var chart = new Nugget.Chart();
+                chart.addGuideLayer({
+                    init: function(guideLayerEl, chartOpts) {
+                        expect(guideLayerEl.node().outerHTML).toBe('<g class="guide_layer"></g>');
+                        expect(guideLayerEl.node().parentNode).toBe(chartOpts.d3Svg.node());
+                        expect(Object.keys(chartOpts)).toEqual(["d3Svg", "zooms", "xRange", "yRange", "width", "height", "margins", "padding", "xLabelFormat", "yLabelFormat"]);
+
+                        done();
+                    }
+                });
+                chart.appendTo('#container');
+            });
+
+            it('should add a guide layer behind the legend', function() {
+                var chart;
+
+                function testLayering() {
+                    var childEls = $('#container').children().toArray();
+                    var guideIdx = childEls.indexOf( $('.guide_layer')[0] );
+                    var legendIdx = childEls.indexOf( $('.legend')[0] );
+                    expect(legendIdx).toBeGreaterThan(guideIdx);
+                }
+
+                chart = new Nugget.Chart({
+                    legend: true
+                });
+                chart.addGuideLayer({ init: function(){} });
+                chart.appendTo('#container');
+
+                testLayering();
+                chart.update();
+                testLayering();
+            });
+
+            it('should require an init method', function() {
+                var chart = new Nugget.Chart();
+                expect(function() {
+                    chart.addGuideLayer({});
+                }).toThrow();
+            });
+        });
 
 
         describe('Box zoom', function() {
@@ -190,9 +252,9 @@ function (
 
             function getDomains() {
                 var domains = {
-                    x: chart._xRange.domain(),
-                    y: chart._yRange.domain()
-               };
+                    x: chart.xRange.domain(),
+                    y: chart.yRange.domain()
+                };
                 return domains;
             }
 
@@ -214,7 +276,7 @@ function (
             it('should zoom axes appropriately', function() {
                 var origDomains = getDomains();
                 expect(origDomains.x[0]).toBeCloseTo(-0.63, 2);
-                expect(origDomains.y[1]).toBeCloseTo(113.33, 2);
+                expect(origDomains.y[1]).toBeCloseTo(102.22, 2);
 
                 Utils.trigger(container, 'mousedown', 50, 50);
                 Utils.trigger(container, 'mousemove', 100, 100);
@@ -224,7 +286,7 @@ function (
                 expect(newDomains.x[0]).toBeCloseTo(-0.63, 2);
                 expect(newDomains.x[1]).toBeCloseTo(50.63, 2);
                 expect(newDomains.y[0]).toBeCloseTo(-2.22, 2);
-                expect(newDomains.y[1]).toBeCloseTo(113.33, 2);
+                expect(newDomains.y[1]).toBeCloseTo(102.22, 2);
             });
 
             it('should reset zoom on doubleclick', function() {
@@ -338,10 +400,42 @@ function (
                 chartWithLegend.add(line);
                 chartWithLegend.appendTo('#container');
 
-                var noLegendYRangeMax = chart._yRange.domain()[1];
-                var legendYRangeMax = chartWithLegend._yRange.domain()[1];
+                var noLegendYRangeMax = chart.yRange.domain()[1];
+                var legendYRangeMax = chartWithLegend.yRange.domain()[1];
 
                 expect(legendYRangeMax).toBeGreaterThan(noLegendYRangeMax);
+            });
+
+            it('should update the legend when data changes', function() {
+                var chart = new Nugget.Chart({
+                    throttleUpdate: false,
+                    legend: true
+                });
+                var dataSeries = new Nugget.BinnedMeanDataSeries();
+                var graph = new Nugget.BinnedMeanGraph({
+                    dataSeries: dataSeries
+                });
+                chart.add(graph);
+                chart.appendTo('#container');
+                expect($('.legend_label').text()).toBe('');
+
+                dataSeries.setData([{
+                    num_values: 10,
+                    x_high: 200,
+                    x_low: 100,
+                    x_mean: 150,
+                    y_mean: 150
+                }]);
+                expect($('.legend_label').text()).toBe('approx. 2 values');
+
+                dataSeries.setData([{
+                    num_values: 5,
+                    x_high: 200,
+                    x_low: 100,
+                    x_mean: 150,
+                    y_mean: 150
+                }]);
+                expect($('.legend_label').text()).toBe('approx. 1 values');
             });
         });
 
@@ -408,7 +502,7 @@ function (
                 }).toArray();
 
                 expect(xTicks).toEqual(['0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50']);
-                expect(yTicks).toEqual(['0.00000', '10.0000', '20.0000', '30.0000', '40.0000', '50.0000', '60.0000', '70.0000', '80.0000', '90.0000', '100.000', '110.000']);
+                expect(yTicks).toEqual(['0.00000', '10.0000', '20.0000', '30.0000', '40.0000', '50.0000', '60.0000', '70.0000', '80.0000', '90.0000', '100.000']);
             });
 
             it('should render tick labels without formatting', function() {
@@ -429,15 +523,30 @@ function (
                 }).toArray();
 
                 expect(xTicks).toEqual([ '0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50' ]);
-                expect(yTicks).toEqual([ '0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100', '110' ]);
-           });
+                expect(yTicks).toEqual([ '0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100' ]);
+            });
+
+            it('should render the specified number of ticks', function() {
+                var chart = new Nugget.Chart({
+                    width: 400,
+                    height: 400,
+                    numXTicks: 0,
+                    numYTicks: 2
+                });
+
+                chart.add(line);
+                chart.appendTo('#container');
+
+                expect($('.x_axis .tick').length).toBe(0);
+                expect($('.y_axis .tick').length).toBe(2);
+            }) ;
        });
 
 
         describe('HTML smoke tests', function() {
-            var lineGraphHtml = '<svg id="container" width="900" height="500"><g class="x_axis" transform="translate(0,480)"><g class="tick" transform="translate(109.75,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">0</text></g><g class="tick" transform="translate(185.8,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">10</text></g><g class="tick" transform="translate(261.85,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">20</text></g><g class="tick" transform="translate(337.9,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">30</text></g><g class="tick" transform="translate(413.95000000000005,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">40</text></g><g class="tick" transform="translate(490.0000000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">50</text></g><g class="tick" transform="translate(566.0500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">60</text></g><g class="tick" transform="translate(642.1,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">70</text></g><g class="tick" transform="translate(718.1500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">80</text></g><g class="tick" transform="translate(794.2000000000002,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">90</text></g><g class="tick" transform="translate(870.2500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">100</text></g><path class="domain" d="M100,0V0H880V0"></path></g><g class="y_axis" transform="translate(100, 0)"><g class="tick" transform="translate(0,471.3207547169811)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">0</text></g><g class="tick" transform="translate(0,431.3962264150943)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">10</text></g><g class="tick" transform="translate(0,391.4716981132076)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">20</text></g><g class="tick" transform="translate(0,351.54716981132077)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">30</text></g><g class="tick" transform="translate(0,311.622641509434)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">40</text></g><g class="tick" transform="translate(0,271.69811320754724)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">50</text></g><g class="tick" transform="translate(0,231.77358490566036)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">60</text></g><g class="tick" transform="translate(0,191.84905660377356)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">70</text></g><g class="tick" transform="translate(0,151.92452830188677)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">80</text></g><g class="tick" transform="translate(0,111.99999999999997)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">90</text></g><g class="tick" transform="translate(0,72.0754716981132)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">100</text></g><g class="tick" transform="translate(0,32.15094339622641)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">110</text></g><path class="domain" d="M0,20H0V480H0"></path></g><clipPath id="clip1"><rect x="100" y="20" width="780" height="460"></rect></clipPath><g class="drawing_surface" clip-path="url(#clip1)"><g data-id="graph_3"><path stroke-width="2" class="line" fill="none" stroke="green" d="M109.75,471.3207547169811L490.0000000000001,271.69811320754724L109.75,72.0754716981132"></path></g><g data-id="graph_4"><path stroke-width="2" class="line" fill="none" stroke="#09e" d="M109.75,72.0754716981132L490.0000000000001,271.69811320754724L870.2500000000001,471.3207547169811"></path></g></g><text x="500" y="495" class="axis_label" style="text-anchor: middle;">row</text><text transform="rotate(-90)" class="axis_label" y="25" x="-250" style="text-anchor: middle;">value</text><g class="zoom_fixture_x"></g><g class="zoom_fixture_y"></g><svg class="legend" x="110" y="30" width="760" height="30"></svg><line x1="100" x2="880" y1="20" y2="20" class="bounding_box"></line><line x1="880" x2="880" y1="20" y2="480" class="bounding_box"></line></svg>';
+            var lineGraphHtml = '<svg id="container" width="900" height="500"><clipPath id="clip1"><rect x="100" y="20" width="780" height="460"></rect></clipPath><g class="drawing_surface" clip-path="url(#clip1)"><g data-id="graph_3"><path stroke-width="2" class="line" fill="none" stroke="green" d="M109.75,471.3207547169811L490.0000000000001,271.69811320754724L109.75,72.0754716981132"></path></g><g data-id="graph_4"><path stroke-width="2" class="line" fill="none" stroke="#09e" d="M109.75,72.0754716981132L490.0000000000001,271.69811320754724L870.2500000000001,471.3207547169811"></path></g></g><text x="490" y="495" class="axis_label" style="text-anchor: middle;">row</text><text transform="rotate(-90)" class="axis_label" y="25" x="-250" style="text-anchor: middle;">value</text><g class="x_axis" transform="translate(0,480)"><g class="tick" transform="translate(109.75,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">0</text></g><g class="tick" transform="translate(185.8,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">10</text></g><g class="tick" transform="translate(261.85,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">20</text></g><g class="tick" transform="translate(337.9,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">30</text></g><g class="tick" transform="translate(413.95000000000005,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">40</text></g><g class="tick" transform="translate(490.0000000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">50</text></g><g class="tick" transform="translate(566.0500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">60</text></g><g class="tick" transform="translate(642.1,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">70</text></g><g class="tick" transform="translate(718.1500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">80</text></g><g class="tick" transform="translate(794.2000000000002,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">90</text></g><g class="tick" transform="translate(870.2500000000001,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">100</text></g><path class="domain" d="M100,0V0H880V0"></path></g><g class="y_axis" transform="translate(100, 0)"><g class="tick" transform="translate(0,471.3207547169811)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">0</text></g><g class="tick" transform="translate(0,431.3962264150943)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">10</text></g><g class="tick" transform="translate(0,391.4716981132076)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">20</text></g><g class="tick" transform="translate(0,351.54716981132077)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">30</text></g><g class="tick" transform="translate(0,311.622641509434)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">40</text></g><g class="tick" transform="translate(0,271.69811320754724)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">50</text></g><g class="tick" transform="translate(0,231.77358490566036)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">60</text></g><g class="tick" transform="translate(0,191.84905660377356)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">70</text></g><g class="tick" transform="translate(0,151.92452830188677)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">80</text></g><g class="tick" transform="translate(0,111.99999999999997)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">90</text></g><g class="tick" transform="translate(0,72.0754716981132)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">100</text></g><g class="tick" transform="translate(0,32.15094339622641)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">110</text></g><path class="domain" d="M0,20H0V480H0"></path></g><g class="zoom_fixture_x"></g><g class="zoom_fixture_y"></g><svg class="legend" x="110" y="30" width="760" height="30"><rect class="legend_bg" width="100%" height="100%"></rect></svg><line x1="100" x2="880" y1="20" y2="20" class="bounding_box"></line><line x1="880" x2="880" y1="20" y2="480" class="bounding_box"></line></svg>';
 
-            var lineGraphNoOptionsHtml = '<svg id="container" width="900" height="500"><g class="x_axis" transform="translate(0,450)"><g class="tick" transform="translate(109.75308641975309,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">0</text></g><g class="tick" transform="translate(186.80246913580248,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">10</text></g><g class="tick" transform="translate(263.85185185185185,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">20</text></g><g class="tick" transform="translate(340.9012345679012,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">30</text></g><g class="tick" transform="translate(417.9506172839506,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">40</text></g><g class="tick" transform="translate(495,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">50</text></g><g class="tick" transform="translate(572.0493827160493,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">60</text></g><g class="tick" transform="translate(649.0987654320988,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">70</text></g><g class="tick" transform="translate(726.1481481481482,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">80</text></g><g class="tick" transform="translate(803.1975308641976,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">90</text></g><g class="tick" transform="translate(880.2469135802469,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">100</text></g><path class="domain" d="M100,0V0H890V0"></path></g><g class="y_axis" transform="translate(100, 0)"><g class="tick" transform="translate(0,441.3461538461538)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">0</text></g><g class="tick" transform="translate(0,402.4038461538462)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">10</text></g><g class="tick" transform="translate(0,363.46153846153845)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">20</text></g><g class="tick" transform="translate(0,324.5192307692308)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">30</text></g><g class="tick" transform="translate(0,285.57692307692304)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">40</text></g><g class="tick" transform="translate(0,246.63461538461542)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">50</text></g><g class="tick" transform="translate(0,207.6923076923077)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">60</text></g><g class="tick" transform="translate(0,168.75)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">70</text></g><g class="tick" transform="translate(0,129.8076923076923)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">80</text></g><g class="tick" transform="translate(0,90.8653846153846)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">90</text></g><g class="tick" transform="translate(0,51.92307692307689)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">100</text></g><g class="tick" transform="translate(0,12.980769230769235)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">110</text></g><path class="domain" d="M0,0H0V450H0"></path></g><clipPath id="clip1"><rect x="100" y="0" width="790" height="450"></rect></clipPath><g class="drawing_surface" clip-path="url(#clip1)"><g data-id="graph_4"><path stroke-width="2" class="line" fill="none" stroke="#09e" d="M109.75308641975309,51.92307692307689L495,246.63461538461542L880.2469135802469,441.3461538461538"></path></g><g data-id="graph_3"><path stroke-width="2" class="line" fill="none" stroke="green" d="M109.75308641975309,441.3461538461538L495,246.63461538461542L109.75308641975309,51.92307692307689"></path></g></g><text x="500" y="487.5" class="axis_label" style="text-anchor: middle;">number of beers</text><text transform="rotate(-90)" class="axis_label" y="25" x="-250" style="text-anchor: middle;">how good i look</text><g class="zoom_fixture_x"></g><g class="zoom_fixture_y"></g><svg class="legend" x="110" y="10" width="770" height="30"></svg><line x1="100" x2="890" y1="0" y2="0" class="bounding_box"></line><line x1="890" x2="890" y1="0" y2="450" class="bounding_box"></line></svg>';
+            var lineGraphNoOptionsHtml = '<svg id="container" width="900" height="500"><clipPath id="clip1"><rect x="100" y="0" width="790" height="450"></rect></clipPath><g class="drawing_surface" clip-path="url(#clip1)"><g data-id="graph_4"><path stroke-width="2" class="line" fill="none" stroke="#09e" d="M109.75308641975309,9.574468085106346L495,225L880.2469135802469,440.4255319148936"></path></g><g data-id="graph_3"><path stroke-width="2" class="line" fill="none" stroke="green" d="M109.75308641975309,440.4255319148936L495,225L109.75308641975309,9.574468085106346"></path></g></g><text x="495" y="487.5" class="axis_label" style="text-anchor: middle;">number of beers</text><text transform="rotate(-90)" class="axis_label" y="25" x="-225" style="text-anchor: middle;">how good i look</text><g class="x_axis" transform="translate(0,450)"><g class="tick" transform="translate(109.75308641975309,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">0</text></g><g class="tick" transform="translate(186.80246913580248,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">10</text></g><g class="tick" transform="translate(263.85185185185185,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">20</text></g><g class="tick" transform="translate(340.9012345679012,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">30</text></g><g class="tick" transform="translate(417.9506172839506,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">40</text></g><g class="tick" transform="translate(495,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">50</text></g><g class="tick" transform="translate(572.0493827160493,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">60</text></g><g class="tick" transform="translate(649.0987654320988,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">70</text></g><g class="tick" transform="translate(726.1481481481482,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">80</text></g><g class="tick" transform="translate(803.1975308641976,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">90</text></g><g class="tick" transform="translate(880.2469135802469,0)" style="opacity: 1;"><line y2="-7" x2="0"></line><text dy=".71em" y="7" x="0" style="text-anchor: middle;">100</text></g><path class="domain" d="M100,0V0H890V0"></path></g><g class="y_axis" transform="translate(100, 0)"><g class="tick" transform="translate(0,440.4255319148936)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">0</text></g><g class="tick" transform="translate(0,397.3404255319149)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">10</text></g><g class="tick" transform="translate(0,354.25531914893617)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">20</text></g><g class="tick" transform="translate(0,311.17021276595744)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">30</text></g><g class="tick" transform="translate(0,268.0851063829787)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">40</text></g><g class="tick" transform="translate(0,225)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">50</text></g><g class="tick" transform="translate(0,181.91489361702128)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">60</text></g><g class="tick" transform="translate(0,138.82978723404253)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">70</text></g><g class="tick" transform="translate(0,95.74468085106382)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">80</text></g><g class="tick" transform="translate(0,52.659574468085054)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">90</text></g><g class="tick" transform="translate(0,9.574468085106346)" style="opacity: 1;"><line x2="7" y2="0"></line><text dy=".32em" x="-7" y="0" style="text-anchor: end;">100</text></g><path class="domain" d="M0,0H0V450H0"></path></g><g class="zoom_fixture_x"></g><g class="zoom_fixture_y"></g><line x1="100" x2="890" y1="0" y2="0" class="bounding_box"></line><line x1="890" x2="890" y1="0" y2="450" class="bounding_box"></line></svg>';
 
             it('should render a LineGraph with options', function () {
                 var chart = new Nugget.Chart({
@@ -452,7 +561,8 @@ function (
                     axisLabels: {
                         x: 'row',
                         y: 'value'
-                    }
+                    },
+                    legend: true
                 });
 
                 chart.add(line);
@@ -461,8 +571,7 @@ function (
                 chart.appendTo('#container');
 
                 expect($svg[0].outerHTML).toBe(lineGraphHtml);
-           });
-
+            });
 
             it('should render a lineGraph without options', function() {
                 var chart = new Nugget.Chart({
@@ -480,7 +589,7 @@ function (
                 chart.appendTo('#container');
 
                 expect($svg[0].outerHTML).toBe(lineGraphNoOptionsHtml);
-           });
+            });
        });
 
    });

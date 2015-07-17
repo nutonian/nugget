@@ -7,7 +7,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Box Plot Tests', function () {
+    describe('BoxPlot', function () {
         var data = [
             {
                 x_value: '0',
@@ -115,11 +115,11 @@ function (
                 }).toArray();
 
                 expect(bgData).toEqual([
-                    {'x': '83.5', 'y': '435.34375', 'width': '12', 'height': '15'},
-                    {'x': '76.5', 'y': '339.96875', 'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '240.625',   'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '141.28125', 'width': '19', 'height': '15'},
-                    {'x': '76.5', 'y': '45.921875', 'width': '19', 'height': '15'}
+                    {'x':'83.5', 'y':'435.921875', 'width':'12', 'height':'15'},
+                    {'x':'76.5', 'y':'330.40625' , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'220.5'     , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'110.578125', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'5.0625'    , 'width':'19', 'height':'15'}
                 ]);
             });
 
@@ -162,17 +162,17 @@ function (
             });
 
             it('should only render guides that are within the yRange on zoom', function() {
-                var zoomY = chart._zooms.zoomY;
+                var zoomY = chart.zooms.zoomY;
                 zoomY.scale(1.5);
-                zoomY.event(chart._d3Svg);
+                zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(3);
 
                 zoomY.scale(10);
-                zoomY.event(chart._d3Svg);
-                expect($('.guide_label').length).toBe(0);
+                zoomY.event(chart.d3Svg);
+                expect($('.guide_label').length).toBe(1);
 
                 zoomY.scale(1);
-                zoomY.event(chart._d3Svg);
+                zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(5);
             });
         });

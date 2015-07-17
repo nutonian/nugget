@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+    <style>
+        .svg_container {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Scatter plot in Nugget</h4>
+<div class="svg_container">
+    <svg id="container" width="100%" height="100%"></svg>
+</div>
+<script>
+    require.config({
+        baseUrl: '/build'
+    });
+
+    require(['Nugget'], function (Nugget) {
+        var chart = new Nugget.Chart({
+            axisLabels: {
+                x: 'foo',
+                y: 'bar'
+            },
+            guides: true
+        });
+
+        var dataSeries = new Nugget.NumericalDataSeries();
+
+        var lineGraph = new Nugget.LineGraph({
+            color: '#09f',
+            dataSeries: dataSeries
+        });
+        chart.add(lineGraph);
+
+        var scatterGraph = new Nugget.ScatterGraph({
+            color: '#009',
+            dataSeries: dataSeries
+        });
+        chart.add(scatterGraph);
+
+        chart.appendTo('#container');
+
+        dataSeries.setData([
+            {x_value: 0,  y_value: 0},
+            {x_value: 10, y_value: 10},
+            {x_value: 20, y_value: 20},
+            {x_value: 30, y_value: 10},
+            {x_value: 40, y_value: 30}
+        ]);
+
+        setInterval(function() {
+            var data = dataSeries.getDataCopy();
+            var newData = data.map(function(d) {
+                return {
+                    x_value: Math.random() * 1000,
+                    y_value: Math.random() * 1000
+                }
+            });
+            dataSeries.setData(newData);
+        }, 1000);
+    });
+</script>
+</body>
+</html>

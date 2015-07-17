@@ -49,13 +49,8 @@
     fill: rgba(255, 255, 255, 0.4);
 }
 
-.bin_circle, .legend_circle {
+.bin_circle, circle.legend_swatch {
     fill: rgba(0, 100, 255, 0.5);
-}
-
-path.line {
-    stroke: #f90;
-    stroke-width: 2;
 }
 
 .guide_line {

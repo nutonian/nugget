@@ -7,7 +7,7 @@ function (
     Nugget,
     d3
 ) {
-    describe('Scatter Plot Tests', function () {
+    describe('ScatterGraph', function () {
         var data = [
             {x_value: 0,  y_value: 10},
             {x_value: 1,  y_value: 16},
@@ -67,17 +67,17 @@ function (
                 label: {
                     text: String(point.x_value),
                     x: 383,
-                    y: 267
+                    y: 266
                 },
                 bg: {
                     x: 373.5,
-                    y: 254,
+                    y: 254.5,
                     width: 19,
                     height: 15
                 },
                 line: {
                     x1: 381,
-                    y1: 96,
+                    y1: 67,
                     x2: 381,
                     y2: 250
                 }
@@ -89,19 +89,19 @@ function (
                 label: {
                     text: String(point.y_value),
                     x: 93,
-                    y: 103
+                    y: 74
                 },
                 bg: {
                     x: 76.5,
-                    y: 90,
+                    y: 62.625,
                     width: 19,
                     height: 15
                 },
                 line: {
                     x1: 100,
-                    y1: 96,
+                    y1: 67,
                     x2: 381,
-                    y2: 96
+                    y2: 67
                 }
             });
         });
@@ -112,7 +112,7 @@ function (
             var pointEl = $('.point:eq('+ idx +')')[0];
             Utils.trigger(pointEl, 'mouseenter');
 
-            var zooms = chart._zooms;
+            var zooms = chart.zooms;
             var zoomX = zooms.zoomX;
             var zoomY = zooms.zoomY;
 
@@ -122,8 +122,8 @@ function (
             zoomX.scale(1.5);
             zoomY.scale(1.5);
 
-            zoomX.event(chart._d3Svg);
-            zoomY.event(chart._d3Svg);
+            zoomX.event(chart.d3Svg);
+            zoomY.event(chart.d3Svg);
 
             // X Guide
             Utils.validateGuide($('.scatter_plot_guides'), {
@@ -131,11 +131,11 @@ function (
                 label: {
                     text: String(point.x_value),
                     x: 352,
-                    y: 267
+                    y: 266
                 },
                 bg: {
                     x: 346,
-                    y: 254,
+                    y: 254.5,
                     width: 12,
                     height: 15
                 },
@@ -153,11 +153,11 @@ function (
                 label: {
                     text: String(point.y_value),
                     x: 93,
-                    y: 326
+                    y: 316
                 },
                 bg: {
                     x: 76.5,
-                    y: 313,
+                    y: 304.5,
                     width: 19,
                     height: 15
                 },
