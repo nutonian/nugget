@@ -189,6 +189,37 @@ function (
             expect(spy).toHaveBeenCalled();
         });
 
+        it('should disable zoom after user double clicks on the main svg element', function() {
+            var chart = new Nugget.Chart();
+            var spy = spyOn(chart, '_disableZooming');
+
+            chart.appendTo('#container');
+
+            // Enable zooming
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).not.toHaveBeenCalled();
+
+            // Disable with double click (aka two quick mousedowns followed by a mouseup)
+            Utils.trigger(chart.d3Svg.node(), 'mousedown');
+            Utils.trigger(chart.d3Svg.node(), 'mousedown');
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).toHaveBeenCalled();
+        });
+
+        it('should disable zoom if the user clicks outside of the main svg element', function() {
+            var chart = new Nugget.Chart();
+            var spy = spyOn(chart, '_disableZooming');
+
+            chart.appendTo('#container');
+
+            // Enable zooming
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).not.toHaveBeenCalled();
+
+            Utils.trigger(d3.select('body').node(), 'click');
+            expect(spy).toHaveBeenCalled();
+        });
+
         describe('Guide Layer', function(done) {
             it('should add a custom guide layer', function(done) {
                 var chart = new Nugget.Chart();
