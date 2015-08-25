@@ -115,11 +115,11 @@ function (
                 }).toArray();
 
                 expect(bgData).toEqual([
-                    {'x':'83.5', 'y':'435.921875', 'width':'12', 'height':'15'},
-                    {'x':'76.5', 'y':'330.40625' , 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'220.5'     , 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'110.578125', 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'5.0625'    , 'width':'19', 'height':'15'}
+                    {'x':'83.5', 'y':'435.6875', 'width':'12', 'height':'15'},
+                    {'x':'76.5', 'y':'330.171875' , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'220.265625'     , 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'110.359375', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'4.84375'    , 'width':'19', 'height':'15'}
                 ]);
             });
 
@@ -162,7 +162,7 @@ function (
             });
 
             it('should only render guides that are within the yRange on zoom', function() {
-                var zoomY = chart.zooms.zoomY;
+                var zoomY = chart.zoomY;
                 zoomY.scale(1.5);
                 zoomY.event(chart.d3Svg);
                 expect($('.guide_label').length).toBe(3);

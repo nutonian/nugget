@@ -112,9 +112,8 @@ function (
             var pointEl = $('.point:eq('+ idx +')')[0];
             Utils.trigger(pointEl, 'mouseenter');
 
-            var zooms = chart.zooms;
-            var zoomX = zooms.zoomX;
-            var zoomY = zooms.zoomY;
+            var zoomX = chart.zoomX;
+            var zoomY = chart.zoomY;
 
             expect(zoomX.scale()).toBe(1);
             expect(zoomY.scale()).toBe(1);
