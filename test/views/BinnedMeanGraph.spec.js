@@ -211,9 +211,8 @@ function (
                 var el = $('.bin_circle:eq(1)')[0];
                 Utils.trigger(el, 'mouseenter');
 
-                var zooms = chart.zooms;
-                var zoomX = zooms.zoomX;
-                var zoomY = zooms.zoomY;
+                var zoomX = chart.zoomX;
+                var zoomY = chart.zoomY;
 
                 expect(zoomX.scale()).toBe(1);
                 expect(zoomY.scale()).toBe(1);
