@@ -27,6 +27,7 @@ function (
 
         var $svg;
         var chart;
+        var scatterGraph;
 
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
@@ -37,7 +38,7 @@ function (
                 width: 400,
                 height: 300
             });
-            var scatterGraph = new Nugget.ScatterGraph({
+            scatterGraph = new Nugget.ScatterGraph({
                 dataSeries: dataSeries,
                 color: 'orange'
             });
@@ -168,6 +169,33 @@ function (
                 }
             });
         });
+
+        it('should draw a y axis guide for given x', function() {
+            var guideEl = chart.d3Svg.append('g').attr('class', 'guide_layer');
+
+            scatterGraph.drawYGuide(4, guideEl, chart);
+
+            Utils.validateGuide($('.y_guide'), {
+                label: {
+                    text: '19',
+                    x: 93,
+                    y: 143.5
+                },
+                bg: {
+                    x: 76.5,
+                    y: 131.8,
+                    width: 19,
+                    height: 15
+                },
+                line: {
+                    x1: 100,
+                    y1: 136.5,
+                    x2: 192.8,
+                    y2: 136.5
+                }
+            });
+        });
+
 
     });
 });

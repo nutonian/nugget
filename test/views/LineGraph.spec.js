@@ -1,3 +1,4 @@
+/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -6,10 +7,11 @@ function (
     Nugget,
     d3
 ) {
-    describe('Line Graph Tests', function () {
+    describe('LineGraph', function () {
 
         var $svg;
         var chart;
+        var line;
 
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
@@ -18,14 +20,7 @@ function (
                 width: 500,
                 height: 500
             });
-        });
 
-        afterEach(function() {
-            $svg.remove();
-            chart = null;
-        });
-
-        it('should render a line graph', function() {
             var data = [
                 {x_value: 0,   y_value: 100},
                 {x_value: 100, y_value: 0},
@@ -34,13 +29,21 @@ function (
 
             var dataseries = new Nugget.NumericalDataSeries(data);
 
-            var line = new Nugget.LineGraph({
+            line = new Nugget.LineGraph({
                 dataSeries: dataseries,
                 color: 'purple'
             });
 
             chart.add(line);
             chart.appendTo('#container');
+        });
+
+        afterEach(function() {
+            $svg.remove();
+            chart = null;
+        });
+
+        it('should render a line graph', function() {
 
             var $plotline = $('path.line');
 
@@ -52,6 +55,32 @@ function (
             expect(expectedPoints[1]).toBeCloseTo(parseInt(actualPoints[1]));
             expect(expectedPoints[2]).toBeCloseTo(parseInt(actualPoints[2]));
             expect(expectedPoints[3]).toBeCloseTo(parseInt(actualPoints[3]));
+        });
+
+        it('should draw a y axis guide for given x', function() {
+            var guideEl = chart.d3Svg.append('g').attr('class', 'guide_layer');
+
+            line.drawYGuide(100, guideEl, chart);
+
+            Utils.validateGuide($('.y_guide'), {
+                label: {
+                    text: '0',
+                    x: 93,
+                    y: 447
+                },
+                bg: {
+                    x: 83.5,
+                    y: 435.7,
+                    width: 12,
+                    height: 15
+                },
+                line: {
+                    x1: 100,
+                    y1: 440,
+                    x2: 295,
+                    y2: 440
+                }
+            });
         });
     });
 });
