@@ -114,13 +114,13 @@ function (
                     };
                 }).toArray();
 
-                expect(bgData).toEqual([
-                    {'x':'83.5', 'y':'435.6875', 'width':'12', 'height':'15'},
-                    {'x':'76.5', 'y':'330.171875' , 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'220.265625'     , 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'110.359375', 'width':'19', 'height':'15'},
-                    {'x':'76.5', 'y':'4.84375'    , 'width':'19', 'height':'15'}
-                ]);
+                expect(bgData).toBeCloseToArray([
+                    {'x':'83.5', 'y':'435', 'width':'12', 'height':'15'},
+                    {'x':'76.5', 'y':'330', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'220', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'110', 'width':'19', 'height':'15'},
+                    {'x':'76.5', 'y':'5'  , 'width':'19', 'height':'15'}
+                ], 1);
             });
 
             it('should draw guide lines', function() {
@@ -129,19 +129,42 @@ function (
                     var $line = $guide.find('.guide_line');
                     return {
                         x1: $line.attr('x1'),
-                        y1: $line.attr('x1'),
+                        y1: $line.attr('y1'),
                         x2: $line.attr('x2'),
-                        y2: $line.attr('x2'),
+                        y2: $line.attr('y2')
                     };
                 }).toArray();
 
-                expect(lineData).toEqual([
-                    {'x1': '93', 'y1': '93', 'x2': '183.15789794921875', 'y2': '183.15789794921875'},
-                    {'x1': '93', 'y1': '93', 'x2': '183.15789794921875', 'y2': '183.15789794921875'},
-                    {'x1': '93', 'y1': '93', 'x2': '183.15789794921875', 'y2': '183.15789794921875'},
-                    {'x1': '93', 'y1': '93', 'x2': '183.15789794921875', 'y2': '183.15789794921875'},
-                    {'x1': '93', 'y1': '93', 'x2': '183.15789794921875', 'y2': '183.15789794921875'}
-                ]);
+                expect(lineData[0]).toBeCloseToObject({
+                    'x1': '93',
+                    'y1': '440',
+                    'x2': '183',
+                    'y2': '440'},
+                1);
+                expect(lineData[1]).toBeCloseToObject({
+                    'x1': '93',
+                    'y1': '335',
+                    'x2': '183',
+                    'y2': '335'},
+                1);
+                expect(lineData[2]).toBeCloseToObject({
+                    'x1': '93',
+                    'y1': '225',
+                    'x2': '183',
+                    'y2': '225'},
+                1);
+                expect(lineData[3]).toBeCloseToObject({
+                    'x1': '93',
+                    'y1': '115',
+                    'x2': '183',
+                    'y2': '115'},
+                1);
+                expect(lineData[4]).toBeCloseToObject({
+                    'x1': '93',
+                    'y1': '10',
+                    'x2': '183',
+                    'y2': '10'},
+                1);
             });
 
             it('should draw guide labels', function() {
