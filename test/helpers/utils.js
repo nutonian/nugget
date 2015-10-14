@@ -32,5 +32,9 @@ window.Utils = {
             expect(Number($line.attr('x2'))).toBeCloseTo(opts.line.x2, 0);
             expect(Number($line.attr('y2'))).toBeCloseTo(opts.line.y2, 0);
         }
+    },
+
+    getPointsFromPath: function(pathData) {
+        return pathData.split(/[,ML]/).map(Number);
     }
 };

@@ -1,3 +1,4 @@
+/* global Utils: false */
 define([
     'Nugget',
     '../../../dependencies/d3'
@@ -46,7 +47,8 @@ function (
             var $group = $('.legend_group').eq(idx);
             var $path  = $group.find('path');
 
-            expect($path.attr('d')).toEqual(opts.swatch.data);
+            var pathData = $path.attr('d');
+            expect(Utils.getPointsFromPath(pathData)).toBeCloseToArray(Utils.getPointsFromPath(opts.swatch.data), 1);
             expect($path.attr('fill')).toEqual(opts.swatch.fill);
 
             validateLabel($group, opts);

@@ -25,7 +25,9 @@ beforeEach(function() {
             }
             return { pass: true };
         } else {
-            return { pass: false };
+            var isCloseTo = Number(actualObj) >= (Number(expectedObj) - delta) &&
+                Number(actualObj) <= (Number(expectedObj) + delta);
+            return { pass: isCloseTo };
         }
     }
 
