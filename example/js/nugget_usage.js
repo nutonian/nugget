@@ -29,6 +29,7 @@ require(['Nugget'], function (Nugget) {
 
     chart.add(line1);
     chart.add(line2);
-
+    chart.addGuide(Nugget.Chart.GuideTypes.YYComparison);
+    
     chart.appendTo('#line_graph_nugget');
 });
