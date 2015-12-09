@@ -28,12 +28,13 @@ function (
         var $svg;
         var chart;
         var scatterGraph;
+        var dataSeries;
 
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
             $svg.attr('id', 'container').appendTo('body');
 
-            var dataSeries = new Nugget.NumericalDataSeries(data);
+            dataSeries = new Nugget.NumericalDataSeries(data);
             chart = new Nugget.Chart({
                 width: 400,
                 height: 300
@@ -196,6 +197,26 @@ function (
             });
         });
 
+        it('should animate if flag is true', function() {
+            scatterGraph.shouldAnimate = true;
 
+            spyOn(d3.selection.prototype, 'transition').and.callThrough();
+
+            dataSeries.setData([
+                {x_value: 0,   y_value: 0},
+                {x_value: 100, y_value: 100},
+                {x_value: 200, y_value: 0}
+            ]);
+
+            expect(d3.selection.prototype.transition).toHaveBeenCalled();
+            expect(d3.selection.prototype.transition.calls.count()).toBe(1);
+
+            // now draw without animation
+            scatterGraph.drawElement(chart.d3Svg, chart.xRange, chart.yRange, chart.axisLabels, false);
+
+            // transition should not have been called again, so call count should remain 1
+            expect(d3.selection.prototype.transition.calls.count()).toBe(1);
+
+        });
     });
 });
