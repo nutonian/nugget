@@ -189,6 +189,17 @@ function (
             expect(spy).toHaveBeenCalled();
         });
 
+        it('should not enable zoom after user clicks on the main svg element, if scroll zooming is turned off', function() {
+            var chart = new Nugget.Chart({ scrollZoom: false });
+            var spy = spyOn(chart, '_enableZooming');
+
+            chart.appendTo('#container');
+            expect(spy).not.toHaveBeenCalled();
+
+            Utils.trigger(chart.d3Svg.node(), 'mouseup');
+            expect(spy).not.toHaveBeenCalled();
+        });
+
         it('should disable zoom after user double clicks on the main svg element', function() {
             var chart = new Nugget.Chart();
             var spy = spyOn(chart, '_disableZooming');
@@ -227,7 +238,6 @@ function (
                     init: function(guideLayerEl, chartOpts) {
                         expect(guideLayerEl.node().outerHTML).toBe('<g class="guide_layer"></g>');
                         expect(guideLayerEl.node().parentNode).toBe(chartOpts.d3Svg.node());
-                        expect(Object.keys(chartOpts)).toEqual([ '_events', 'd3Svg', 'legendEl', 'xRange', 'yRange', 'zoomX', 'zoomY', 'guideLayer', '_childElementMap', '_aggregateDataRange', 'width', 'height', 'margins', 'padding', 'axisLabels', 'legend', 'legendHeight', 'legendView', 'xGrid', 'yGrid', 'boxZoom', 'xLabelFormat', 'yLabelFormat', 'resizeWidth', 'resizeHeight', 'throttleUpdate', 'throttledUpdate', 'numXTicks', 'numYTicks', '_drawingSurface', '_xAxis', '_yAxis', '_guideLayerEl' ]);
 
                         done();
                     }
