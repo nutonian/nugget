@@ -18,6 +18,14 @@ function (
 
         var labelY = (svgHeight / 2) + 5;
 
+        function validateLabel($group, opts) {
+            var $label = $group.find('text');
+
+            expect(Number($label.attr('x'))).toBeCloseTo(opts.label.x, 0);
+            expect(Number($label.attr('y'))).toBeCloseTo(opts.label.y, 0);
+            expect($label.text()).toBe(opts.label.text);
+        }
+
         function validateRectSwatch(idx, opts) {
             var $group = $('.legend_group').eq(idx);
             var $rect = $group.find('rect');
@@ -52,14 +60,6 @@ function (
             expect($path.attr('fill')).toEqual(opts.swatch.fill);
 
             validateLabel($group, opts);
-        }
-
-        function validateLabel($group, opts) {
-            var $label = $group.find('text');
-
-            expect(Number($label.attr('x'))).toBeCloseTo(opts.label.x, 0);
-            expect(Number($label.attr('y'))).toBeCloseTo(opts.label.y, 0);
-            expect($label.text()).toBe(opts.label.text);
         }
 
         beforeEach(function() {
