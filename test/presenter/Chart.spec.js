@@ -231,7 +231,7 @@ function (
             expect(spy).toHaveBeenCalled();
         });
 
-        describe('Guide Layer', function(done) {
+        describe('Guide Layer', function() {
             it('should add a custom guide layer', function(done) {
                 var chart = new Nugget.Chart();
                 chart.addGuideLayer({
