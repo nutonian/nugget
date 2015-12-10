@@ -10,7 +10,8 @@
     "it",
     "module",
     "require",
-    "spyOn"
+    "spyOn",
+    "process"
   ],
   "boss": true,
   "browser": true,

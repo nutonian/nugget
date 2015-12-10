@@ -120,6 +120,7 @@ module.exports = function(grunt) {
                     urls         : ['http://localhost:9000/_SpecRunner.html'],
                     tunnelTimeout: 5,
                     concurrency  : 3,
+                    build        : process.env.BUILD_NUMBER,
                     browsers     : [{
                         browserName: "chrome",
                         platform: "OS X 10.8"
