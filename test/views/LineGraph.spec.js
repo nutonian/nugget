@@ -23,9 +23,9 @@ function (
             });
 
             var data = [
-                {x_value: 0,   y_value: 100},
-                {x_value: 100, y_value: 0},
-                {x_value: 200, y_value: 100}
+                {x_value: 0,   y_value: 100, other_y: 200},
+                {x_value: 100, y_value: 0,   other_y: 300},
+                {x_value: 200, y_value: 100, other_y: 400}
             ];
 
             dataseries = new Nugget.NumericalDataSeries(data);
@@ -103,6 +103,34 @@ function (
 
             // transition should not have been called again, so call count should remain 1
             expect(d3.selection.prototype.transition.calls.count()).toBe(1);
+        });
+
+        it('should allow custom y axis guide label property', function() {
+            var guideEl = chart.d3Svg.append('g').attr('class', 'guide_layer');
+
+            line.guideLabelProp = 'other_y';
+            line.drawYGuide(100, guideEl, chart);
+
+            Utils.validateGuide($('.y_guide'), {
+                label: {
+                    text: '300',
+                    x: 93,
+                    y: 447
+                },
+                bg: {
+                    x: 69.5,
+                    y: 435.7,
+                    width: 26,
+                    height: 15
+                },
+                line: {
+                    x1: 100,
+                    y1: 440,
+                    x2: 295,
+                    y2: 440
+                }
+            });
+
         });
     });
 });
