@@ -274,6 +274,69 @@ function (
             });
         });
 
+        describe('Resizing', function() {
+            it('should maintain guide functionality after a resize', function() {
+                function guidesVisible() {
+                    return $('.guide_label_x, .guide_label_y').length === 2;
+                }
+
+                var chart = new Nugget.Chart({
+                    resizeWidth: true
+                });
+                chart.add(line);
+
+                var scatterGraph = new Nugget.ScatterGraph({dataSeries: dataSeries1});
+                chart.add(scatterGraph);
+
+                chart.addGuide(Nugget.Chart.GuideTypes.YYComparison);
+                chart.appendTo('#container');
+
+                var el = $('.point.pointer:eq(1)')[0];
+                Utils.trigger(el, 'mouseenter');
+                expect(guidesVisible()).toBe(true);
+
+                Utils.trigger(el, 'mouseleave');
+                expect(guidesVisible()).toBe(false);
+
+                // Fake out window resize event
+                d3.select(window).on(chart.resizeEventID)();
+
+                Utils.trigger(el, 'mouseenter');
+                expect(guidesVisible()).toBe(true);
+
+                chart.cleanup();
+            });
+
+            it('should resize to fit the svg element and trigger afterResize when done', function(done) {
+                function getPoints() {
+                    return Utils.getPointsFromPath( $('path.line').attr('d') );
+                }
+
+                var chart = new Nugget.Chart({
+                    resizeWidth: true,
+                    resizeHeight: true,
+                    width: 900,
+                    height: 500
+                });
+                chart.add(line);
+                chart.appendTo('#container');
+
+                // Validate initial points...
+                expect(getPoints()).toBeCloseToArray([0, 109, 440, 880, 225, 109, 9], 1);
+
+                // It's very difficult to mess with width/height at this point, so we add some
+                // padding to change the SVG's dimensions
+                $('#container').css({
+                    padding: '10px'
+                });
+                chart.on('afterResize', function() {
+                    // ...and validate after the resize
+                    expect(getPoints()).toBeCloseToArray([0, 109, 537, 1082, 273.5, 109, 9], 1);
+                    done();
+                });
+                d3.select(window).on(chart.resizeEventID)();
+            });
+        });
 
         describe('Box zoom', function() {
             var chart;
@@ -285,7 +348,7 @@ function (
                 chart = new Nugget.Chart({
                     width: chartWidth,
                     height: chartHeight
-               });
+                });
                 chart.add(line);
                 chart.appendTo('#container');
                 container = $('#container')[0];
