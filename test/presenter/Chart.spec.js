@@ -321,20 +321,23 @@ function (
                 chart.add(line);
                 chart.appendTo('#container');
 
-                // Validate initial points...
+                // 1. Validate initial points...
                 expect(getPoints()).toBeCloseToArray([0, 109, 440, 880, 225, 109, 9], 1);
 
-                // It's very difficult to mess with width/height at this point, so we add some
-                // padding to change the SVG's dimensions
-                $('#container').css({
-                    padding: '10px'
+                var appendTo = chart.appendTo;
+                spyOn(chart, 'appendTo').and.callFake(function() {
+                    chart.width = 250;
+                    chart.height = 250;
+                    appendTo.apply(chart, arguments);
                 });
                 chart.on('afterResize', function() {
-                    // ...and validate after the resize
-                    expect(getPoints()).toBeCloseToArray([0, 109, 537, 1082, 273.5, 109, 9], 1);
+                    // 2. Validate again after scaling plot dimensions down
+                    expect(getPoints()).toBeCloseToArray([0, 108, 190, 231, 100, 108, 9], 1);
                     done();
                 });
                 d3.select(window).on(chart.resizeEventID)();
+
+                chart.cleanup();
             });
         });
 
