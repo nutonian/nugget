@@ -35,12 +35,14 @@
                     x_value: 'row',
                     y_value: 'value'
                 },
-                resizeWidth: true
+                resizeWidth: true,
+                legend: true
             });
 
             var line1 = new Nugget.LineGraph({
                 dataSeries: dataSeries1,
-                color: 'green'
+                color: 'green',
+                legendLabel: 'series 1'
             });
 
             var line2 = new Nugget.LineGraph({
