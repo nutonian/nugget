@@ -37,7 +37,7 @@ function (
                 dataSeries: dataSeries,
                 color: 'blue',
                 slope: 1,
-                offset: 5
+                origin: { x: 0, y: 0 }
             });
 
             chart.add(trendline);
@@ -55,15 +55,15 @@ function (
 
             expect(parseInt(x1, 0)).toBe(100);
             expect(parseInt(x2, 0)).toBe(290);
-            expect(parseInt(y1, 0)).toBe(306);
-            expect(parseInt(y2, 0)).toBe(140);
+            expect(parseInt(y1, 0)).toBe(364);
+            expect(parseInt(y2, 0)).toBe(198);
         });
         it('should render a flat trendline', function() {
             var trendline = new Nugget.TrendLine({
                 dataSeries: dataSeries,
                 color: 'purple',
                 slope: 0,
-                offset: 0
+                origin: { x: 0, y: 0 }
             });
 
             chart.add(trendline);
@@ -86,7 +86,7 @@ function (
                 dataSeries: dataSeries,
                 color: 'brown',
                 slope: -1,
-                offset: 0
+                origin: { x: 0, y: 0 }
             });
 
             chart.add(trendline);
