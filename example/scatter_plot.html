@@ -44,8 +44,8 @@
         var trend = new Nugget.TrendLine({
             dataSeries: dataSeries,
             color: 'yellow',
-            slope: 5000000,
-            offset: 50000000
+            slope: Infinity,
+            origin: { x: 0, y: 0 }
         });
 
         chart.add(trend);
