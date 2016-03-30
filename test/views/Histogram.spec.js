@@ -7,7 +7,11 @@ function (
     d3
 ) {
     describe('Histogram Plot Tests', function () {
-        var data = [{x_low: 1, x_high: 3, y: 20}, {x_low: 3, x_high: 4, y: 10}, {x_low: 4, x_high: 9, y: 30}];
+        var data = [
+            {x_min: 1, x_max: 3, y: 20},
+            {x_min: 3, x_max: 4, y: 10},
+            {x_min: 4, x_max: 9, y: 30}
+        ];
 
         var svg = document.createElement('svg');
         svg.setAttribute('id', 'foo');
@@ -21,7 +25,7 @@ function (
 
         });
         it('should render a histogram', function() {
-            var dataseries = new Nugget.RangeDataSeries(data);
+            var dataseries = new Nugget.NumericalDataSeries(data);
 
             var chart = new Nugget.Chart();
             var bars = new Nugget.Histogram({

@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Nugget</h1>
+    <h4>Area Graph Example</h4>
+    <div class="svg_container">
+        <svg id="area_graph_nugget"></svg>
+    </div>
+    <script>
+        require.config({
+            // Development
+            baseUrl: '/build'
+
+            // Production
+            // baseUrl: '/release/'
+        });
+    </script>
+
+    <script>
+        require(['Nugget'], function (Nugget) {
+            var areaGraphData1 = [
+                { x_value: 0,  y_min: 10,  y_max: 20  },
+                { x_value: 5, y_min: 100,  y_max: 155  },
+                { x_value: 10,  y_min: 50, y_max: 65 },
+                { x_value: 15,  y_min: 70, y_max: 85 },
+            ];
+            var dataSeries1 = new Nugget.YRangeDataSeries(areaGraphData1);
+
+            var chart = new Nugget.Chart({
+                axisLabels: {
+                    x_value: 'row',
+                    y_value: 'value'
+                },
+                resizeWidth: true,
+                legend: true
+            });
+
+            var area1 = new Nugget.AreaGraph({
+                dataSeries: dataSeries1,
+                color: '#f4f4f4',
+                legendLabel: 'series 1'
+            });
+
+            chart.add(area1);
+
+            chart.appendTo('#area_graph_nugget');
+        });
+    </script>
+</body>
+</html>
