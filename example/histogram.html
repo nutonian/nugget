@@ -51,9 +51,13 @@
         // baseUrl: '/release/'
     });
     require(['Nugget'], function (Nugget) {
-        var data = [{x_low: 1, x_high: 3, y: 20}, {x_low: 3, x_high: 4, y: 10}, {x_low: 4, x_high: 9, y: 30}];
+        var data = [
+            {x_min: 1, x_max: 3, y_value: 20},
+            {x_min: 3, x_max: 4, y_value: 10},
+            {x_min: 4, x_max: 9, y_value: 30}
+        ];
 
-        var rangeseries = new Nugget.RangeDataSeries(data);
+        var rangeseries = new Nugget.NumericalDataSeries(data);
         var chart = new Nugget.Chart();
         var bars = new Nugget.Histogram({
             dataSeries: rangeseries,
