@@ -233,6 +233,65 @@ function (
                 }
             });
         });
+
+        it('should draw a legend with custom swatches', function() {
+            view.draw(d3El, [
+                {
+                    color: 'orange',
+                    label: 'creamsicle',
+                    shape: 'custom',
+                    drawFn: function(container, data, currX, containerHeight) {
+                        var path = container.append('path')
+                            .attr('d', 'M0,0L20,20')
+                            .attr('fill', data.color);
+
+                        return path;
+                    }
+                },
+                {
+                    color: 'purple',
+                    label: 'sizzurp',
+                    shape: 'custom',
+                    drawFn: function(container, data, currX, containerHeight) {
+                        var circle = container.append('circle')
+                            .attr('cx', 100)
+                            .attr('cy', 200)
+                            .attr('r', 50)
+                            .attr('fill', data.color);
+
+                        return circle;
+                    }
+                }
+            ]);
+
+            validatePathSwatch(0, {
+                swatch: {
+                    data: 'M0,0L20,20',
+                    fill: 'orange'
+                },
+                label: {
+                    x: 30,
+                    y: labelY,
+                    text: 'creamsicle'
+                }
+            });
+
+            validateCircleSwatch(1, {
+                swatch: {
+                    cx: 100,
+                    cy: 200,
+                    radius: 50,
+                    fill: 'purple'
+                },
+                label: {
+                    x: 160,
+                    y: labelY,
+                    text: 'sizzurp'
+                }
+            });
+        });
+
+
     });
 
 });
