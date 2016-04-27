@@ -233,6 +233,16 @@ function (
                 }
             });
         });
+
+        it('should only add legend entries that have labels', function() {
+            view.draw(d3El, [
+                // This should be ignored
+                { color: 'orange', label: null },
+                // This should be rendered
+                { color: 'purple', label: 'sizzurp' }
+            ]);
+            expect($('.legend_group').length).toBe(1);
+        });
     });
 
 });
