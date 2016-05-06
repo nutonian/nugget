@@ -34,6 +34,7 @@ function (
 
         var $svg;
         var chart;
+        var dataSeries;
 
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
@@ -43,7 +44,7 @@ function (
                 height: 500,
                 legend: true
             });
-            var dataSeries = new Nugget.BinnedMeanDataSeries(data);
+            dataSeries = new Nugget.BinnedMeanDataSeries(data);
             var binnedMeanGraph = new Nugget.BinnedMeanGraph({
                 dataSeries: dataSeries,
                 guides: true
@@ -266,6 +267,48 @@ function (
                 });
             });
 
+        });
+
+        it('should update radii when data updates', function() {
+            var oldVals = $svg.find('.bin_circle').map(function() {
+                var $circle = $(this);
+                var attrs = {
+                    r:  Math.floor( $circle.attr('r')  ),
+                    cx: Math.floor( $circle.attr('cx') ),
+                    cy: Math.floor( $circle.attr('cy') )
+                };
+                return attrs;
+            }).toArray();
+            oldVals.sort(function(a, b) {
+                return parseInt(a.cx) > parseInt(b.cx);
+            });
+
+            data.unshift({
+                'num_values': 80,
+                'x_low': -20, // intentionally less than visible x range
+                'x_high': 8,
+                'x_mean': 5,
+                'y_mean': 5
+            });
+            dataSeries.setData(data);
+
+            var newVals = $svg.find('.bin_circle').map(function() {
+                var $circle = $(this);
+                var attrs = {
+                    r:  Math.floor( $circle.attr('r')  ),
+                    cx: Math.floor( $circle.attr('cx') ),
+                    cy: Math.floor( $circle.attr('cy') )
+                };
+                return attrs;
+            }).toArray();
+            newVals.sort(function(a, b) {
+                return parseInt(a.cx) > parseInt(b.cx);
+            });
+
+
+            expect(newVals[1].r).toBeLessThan(oldVals[0].r);
+            expect(newVals[2].r).toBeLessThan(oldVals[1].r);
+            expect(newVals[3].r).toBeLessThan(oldVals[2].r);
         });
     });
 });
