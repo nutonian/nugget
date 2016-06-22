@@ -418,6 +418,31 @@ function (
                 expect(getDomains()).toEqual(origDomains);
             });
 
+            it('shouldn\'t update ranges and axes while zoomed', function(done) {
+                expect(chart.isZoomed).toBe(false);
+
+                Utils.trigger(container, 'mousedown', 50, 50);
+                Utils.trigger(container, 'mousemove', 200, 200);
+                Utils.trigger(container, 'mouseup');
+
+                chart.zoomX.on('zoomend.testZoomIn', function() {
+                    chart.zoomX.on('zoomend.testZoomIn', null);
+                    expect(chart.isZoomed).toBe(true);
+                    expect(chart._drawAxes()).toBe(false);
+                    expect(chart._updateRanges()).toBe(false);
+
+                    // This triggers the zoom reset
+                    Utils.trigger(container, 'mousedown');
+                });
+
+                chart.on('zoomreset', function() {
+                    expect(chart.isZoomed).toBe(false);
+                    expect(chart._drawAxes()).not.toBe(false);
+                    expect(chart._updateRanges()).not.toBe(false);
+                    done();
+                });
+            });
+
             describe('Dragging', function() {
                 function testDrag(opts) {
                     Utils.trigger(container, 'mousedown', opts.x1, opts.y1);
