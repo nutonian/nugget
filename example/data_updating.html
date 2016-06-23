@@ -37,36 +37,41 @@
 
         var lineGraph = new Nugget.LineGraph({
             color: '#09f',
-            dataSeries: dataSeries
+            dataSeries: dataSeries,
+            shouldAnimate: true
         });
         chart.add(lineGraph);
 
         var scatterGraph = new Nugget.ScatterGraph({
             color: '#009',
-            dataSeries: dataSeries
+            dataSeries: dataSeries,
+            shouldAnimate: true
         });
         chart.add(scatterGraph);
 
-        chart.appendTo('#container');
 
-        dataSeries.setData([
-            {x_value: 0,  y_value: 0},
-            {x_value: 10, y_value: 10},
-            {x_value: 20, y_value: 20},
-            {x_value: 30, y_value: 10},
-            {x_value: 40, y_value: 30}
-        ]);
+        var data = [];
+        for (var i = 0; i < 100; i++) {
+            data[i] = {
+                x_value: i,
+                y_value: 100 - (Math.random() * 100)
+            };
+        }
+
+        dataSeries.setData(data);
+
+        chart.appendTo('#container');
 
         setInterval(function() {
             var data = dataSeries.getDataCopy();
             var newData = data.map(function(d) {
                 return {
-                    x_value: Math.random() * 1000,
-                    y_value: Math.random() * 1000
+                    x_value: d.x_value,
+                    y_value: 100 - (Math.random() * 100)
                 }
             });
             dataSeries.setData(newData);
-        }, 1000);
+        }, 5000);
     });
 </script>
 </body>
