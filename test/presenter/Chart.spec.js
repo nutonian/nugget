@@ -431,7 +431,8 @@ function (
                     expect(chart._drawAxes()).toBe(false);
                     expect(chart._updateRanges()).toBe(false);
 
-                    // This triggers the zoom reset
+                    // This triggers the zoom reset (saucelabs requires two mousedown events here)
+                    Utils.trigger(container, 'mousedown');
                     Utils.trigger(container, 'mousedown');
                 });
 
