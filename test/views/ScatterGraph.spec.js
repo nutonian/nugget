@@ -30,6 +30,9 @@ function (
         var scatterGraph;
         var dataSeries;
 
+        var circleDataChecker;
+        var errorBarDataChecker;
+
         beforeEach(function() {
             $svg = $( document.createElementNS('http://www.w3.org/2000/svg', 'svg') );
             $svg.attr('id', 'container').appendTo('body');
@@ -39,9 +42,22 @@ function (
                 width: 400,
                 height: 300
             });
+
+            circleDataChecker = jasmine.createSpy('circleDataChecker');
+            errorBarDataChecker = jasmine.createSpy('errorBarDataChecker');
+
             scatterGraph = new Nugget.ScatterGraph({
                 dataSeries: dataSeries,
-                color: 'orange'
+                color: 'orange',
+                inserts: function(selection) {
+                    selection.selectAll('circle').each(function(d) {
+                        circleDataChecker(d);
+                    });
+
+                    selection.selectAll('g.error_bar').each(function(d) {
+                        errorBarDataChecker(d);
+                    });
+                }
             });
             chart.add(scatterGraph);
             chart.appendTo('#container');
@@ -52,7 +68,7 @@ function (
             chart = null;
         });
 
-        it('should render the correct amount of points', function() {
+        it('should render the correct number of points', function() {
             var $points = $('.point');
             expect($points.length).toEqual(data.length);
         });
@@ -216,7 +232,24 @@ function (
 
             // transition should not have been called again, so call count should remain 1
             expect(d3.selection.prototype.transition.calls.count()).toBe(1);
+        });
 
+        it('should call inserts with the correct data', function() {
+
+            scatterGraph.showErrorBars = true;
+
+            circleDataChecker.calls.reset();
+            errorBarDataChecker.calls.reset();
+
+            var newData = [
+                {x_value: 0,   y_value: 10, y_min: 5, y_max: 15},
+                {x_value: 100, y_value: 20, y_min: 15, y_max: 25},
+                {x_value: 200, y_value: 30, y_min: 25, y_max: 35}
+            ];
+            dataSeries.setData(newData);
+
+            expect(circleDataChecker.calls.allArgs()).toEqual([[newData[0]], [newData[1]], [newData[2]]]);
+            expect(errorBarDataChecker.calls.allArgs()).toEqual([[newData[0]], [newData[1]], [newData[2]]]);
         });
     });
 });
