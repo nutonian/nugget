@@ -27,5 +27,8 @@
   "node": false,
   "sub": true,
   "undef": true,
-  "unused": "vars"
+  "unused": "vars",
+  "globals": {
+    "jasmine": false
+  }
 }
