@@ -36,6 +36,12 @@ window.Utils = {
 
     getPointsFromPath: function(pathData) {
         return pathData.split(/[,ML]/).map(Number);
+    },
+
+    zoomToRegion: function(chartEl, coords) {
+        Utils.trigger(chartEl, 'mousedown', coords.x1, coords.y1);
+        Utils.trigger(chartEl, 'mousemove', coords.x2, coords.y2);
+        Utils.trigger(chartEl, 'mouseup');
     }
 };
 
