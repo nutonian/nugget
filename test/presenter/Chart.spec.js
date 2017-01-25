@@ -36,16 +36,27 @@ function (
             $svg.remove();
         });
 
-        it('should reuse it\'s d3Svg on subsequent appendTo calls', function() {
-            var chart = new Nugget.Chart();
-            chart.add(line);
-            expect(chart.d3Svg).toBeFalsy();
+        it('should force a resize on subsequent appendTo calls', function() {
+            var chart = new Nugget.Chart({
+                width: 500,
+                height: 200
+            });
+            spyOn(chart, 'resizeChart').and.callThrough();
 
+            chart.add(line);
             chart.appendTo('#container');
+            expect(chart.width).toBe(500);
+            expect(chart.height).toBe(200);
+
             var d3Svg = chart.d3Svg;
 
             chart.appendTo('#container');
-            expect(d3Svg).toBe(chart.d3Svg);
+
+            expect(chart.width).toBe($('body').width());
+            expect(chart.height).toBe(277);
+
+            expect(chart.resizeChart).toHaveBeenCalledWith('#container', true);
+            expect(d3Svg).not.toBe(chart.d3Svg);
         });
 
         it('should remove a child element and then reset itself', function() {
@@ -405,9 +416,7 @@ function (
                 expect(origDomains.x[0]).toBeCloseTo(-0.63, 2);
                 expect(origDomains.y[1]).toBeCloseTo(102.22, 2);
 
-                Utils.trigger(container, 'mousedown', 50, 50);
-                Utils.trigger(container, 'mousemove', 100, 100);
-                Utils.trigger(container, 'mouseup');
+                Utils.zoomToRegion(container, { x1: 50, y1: 50, x2: 100, y2: 100 });
 
                 var newDomains = getDomains();
                 expect(newDomains.x[0]).toBeCloseTo(-0.63, 2);
@@ -419,9 +428,7 @@ function (
             it('should reset zoom on doubleclick', function() {
                 var origDomains = getDomains();
 
-                Utils.trigger(container, 'mousedown', 50, 50);
-                Utils.trigger(container, 'mousemove', 200, 200);
-                Utils.trigger(container, 'mouseup');
+                Utils.zoomToRegion(container, { x1: 50, y1: 50, x2: 200, y2: 200 });
 
                 expect(getDomains()).not.toEqual(origDomains);
 
@@ -434,9 +441,7 @@ function (
             it('shouldn\'t update ranges and axes while zoomed', function(done) {
                 expect(chart.isZoomed).toBe(false);
 
-                Utils.trigger(container, 'mousedown', 50, 50);
-                Utils.trigger(container, 'mousemove', 200, 200);
-                Utils.trigger(container, 'mouseup');
+                Utils.zoomToRegion(container, { x1: 50, y1: 50, x2: 200, y2: 200 });
 
                 chart.zoomX.on('zoomend.testZoomIn', function() {
                     chart.zoomX.on('zoomend.testZoomIn', null);
@@ -453,6 +458,22 @@ function (
                     expect(chart.isZoomed).toBe(false);
                     expect(chart._drawAxes()).not.toBe(false);
                     expect(chart._updateRanges()).not.toBe(false);
+                    done();
+                });
+            });
+
+            it('shouldn\'t update ranges on graph removal if the user is zoomed in', function(done) {
+                Utils.zoomToRegion(container, { x1: 50, y1: 50, x2: 200, y2: 200 });
+
+                chart.zoomX.on('zoomend.testZoomIn', function() {
+                    chart.zoomX.on('zoomend.testZoomIn', null);
+
+                    var preRemovalDomains = getDomains();
+                    chart.remove(line);
+
+                    var postRemovalDomains = getDomains();
+                    expect(preRemovalDomains).toEqual(postRemovalDomains);
+
                     done();
                 });
             });
