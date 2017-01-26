@@ -36,27 +36,16 @@ function (
             $svg.remove();
         });
 
-        it('should force a resize on subsequent appendTo calls', function() {
-            var chart = new Nugget.Chart({
-                width: 500,
-                height: 200
-            });
-            spyOn(chart, 'resizeChart').and.callThrough();
-
+        it('should reuse it\'s d3Svg on subsequent appendTo calls', function() {
+            var chart = new Nugget.Chart();
             chart.add(line);
-            chart.appendTo('#container');
-            expect(chart.width).toBe(500);
-            expect(chart.height).toBe(200);
+            expect(chart.d3Svg).toBeFalsy();
 
+            chart.appendTo('#container');
             var d3Svg = chart.d3Svg;
 
             chart.appendTo('#container');
-
-            expect(chart.width).toBe($('body').width());
-            expect(chart.height).toBe(277);
-
-            expect(chart.resizeChart).toHaveBeenCalledWith('#container', true);
-            expect(d3Svg).not.toBe(chart.d3Svg);
+            expect(d3Svg).toBe(chart.d3Svg);
         });
 
         it('should remove a child element and then reset itself', function() {
