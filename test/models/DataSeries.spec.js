@@ -46,7 +46,8 @@ function (
             describe(name, function() {
                 it('should implement all required DataSeries methods and calls', function() {
                     var ctor = NuggetModule.prototype.constructor;
-                    var scales = ctor.ComputeScales([]);
+                    var defaultAxisType = Nugget.Axes.AXIS_TYPES.NUMERICAL;
+                    var scales = ctor.ComputeScales([], defaultAxisType, defaultAxisType);
                     expect(scales.x).toBeDefined();
                     expect(scales.y).toBeDefined();
 

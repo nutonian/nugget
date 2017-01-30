@@ -147,6 +147,45 @@ function (
             expect(newYDomain).toEqual([ 11.822222222222221, 20.177777777777777 ]);
         });
 
+        it('should allow overriding default axis scale', function() {
+            var chart = new Nugget.Chart({
+                width: 500,
+                height: 500
+            });
+
+            // x_values are dates between 01/26/2017 and 02/25/2017
+            var dataSeries = new Nugget.NumericalDataSeries(d3.range(0, 31).map(function(i) {
+                return {
+                    x_value: 1485388800000 + i * 86400000,
+                    y_value: Math.random()
+                };
+            }), { xAxisType: Nugget.Axes.AXIS_TYPES.DATETIME });
+
+            var scatterPlot = new Nugget.ScatterGraph({
+                dataSeries: dataSeries
+            });
+
+            chart.add(scatterPlot);
+            chart.appendTo('#container');
+
+            var axisTickPositions = $('#container .x_axis .tick line').map(function() {
+                return $(this).offset().left;
+            }).get();
+
+            var dataPointPositions = $('#container .drawing_surface circle').map(function() {
+                var $point = $(this);
+                // Add radius to find center of point
+                return $point.offset().left + Number($point.attr('r'));
+            }).get();
+
+            // With a d3 time scale, all axis ticks should align with a data point because
+            // they're both marking the beginning of a day (midnight UTC time)
+            // With a linear scale, they will not align.
+            axisTickPositions.forEach(function(position) {
+                expect(dataPointPositions.includes(position)).toBe(true);
+            });
+        });
+
         it('should create custom scales', function() {
             var chart = new Nugget.Chart({
                 margins: {
