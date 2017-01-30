@@ -25,8 +25,12 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: true,
-                modules: 'amd',
-                blacklist: 'useStrict'
+                presets: [
+                    ['es2015', { modules: 'amd' }]
+                ],
+                plugins: [
+                    'add-module-exports'
+                ]
             },
             dist: {
                 files: [{
@@ -137,7 +141,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('addPolyfill', function() {
         var fs = require('fs');
-        var polyfillPath = './node_modules/grunt-babel/node_modules/babel-core/browser-polyfill.js';
+        var polyfillPath = './node_modules/babel-polyfill/dist/polyfill.js';
         var polyfill = '\r' + fs.readFileSync(polyfillPath, {encoding: 'utf8'});
         fs.appendFileSync('./build/Nugget.js', polyfill, {encoding: 'utf8'});
     });
