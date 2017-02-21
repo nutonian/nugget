@@ -9,13 +9,25 @@ function (
 
     describe('BinnedMeanDataSeries', function() {
 
-        var dataSeries;
+        describe('axes', function() {
+            it('should allow overriding default x axis type', function() {
+                var dataSeries = new Nugget.BinnedMeanDataSeries([], {
+                    xAxisType: Nugget.Axes.AXIS_TYPES.DATETIME
+                });
+                expect(dataSeries.xAxisType).toEqual(Nugget.Axes.AXIS_TYPES.DATETIME);
+            });
 
-        beforeEach(function() {
-            dataSeries = new Nugget.BinnedMeanDataSeries();
+            it('should allow overriding default y axis type', function() {
+                var dataSeries = new Nugget.BinnedMeanDataSeries([], {
+                    yAxisType: Nugget.Axes.AXIS_TYPES.DATETIME
+                });
+                expect(dataSeries.yAxisType).toEqual(Nugget.Axes.AXIS_TYPES.DATETIME);
+            });
         });
 
-        it('validate data', function() {
+        it('should validate data', function() {
+            var dataSeries = new Nugget.BinnedMeanDataSeries();
+
             expect(function() { dataSeries.setData([1, 2, 3]); }).toThrow();
             expect(function() { dataSeries.setData([{
                 x_high: 1,

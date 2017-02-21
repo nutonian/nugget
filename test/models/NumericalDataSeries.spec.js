@@ -9,13 +9,25 @@ function (
 
     describe('NumericalDataSeries', function() {
 
-        var dataSeries;
+        describe('axes', function() {
+            it('should allow overriding default x axis type', function() {
+                var dataSeries = new Nugget.NumericalDataSeries([], {
+                    xAxisType: Nugget.Axes.AXIS_TYPES.DATETIME
+                });
+                expect(dataSeries.xAxisType).toEqual(Nugget.Axes.AXIS_TYPES.DATETIME);
+            });
 
-        beforeEach(function() {
-            dataSeries = new Nugget.NumericalDataSeries();
+            it('should allow overriding default y axis type', function() {
+                var dataSeries = new Nugget.NumericalDataSeries([], {
+                    yAxisType: Nugget.Axes.AXIS_TYPES.DATETIME
+                });
+                expect(dataSeries.yAxisType).toEqual(Nugget.Axes.AXIS_TYPES.DATETIME);
+            });
         });
 
         it('should validate data', function() {
+            var dataSeries = new Nugget.NumericalDataSeries();
+
             expect(function() { dataSeries.setData([1, 2, 3]); }).toThrow();
             expect(function() { dataSeries.setData([{x_value: '1', y_value: '2'}]); }).toThrow();
 
