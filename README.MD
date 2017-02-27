@@ -2,7 +2,7 @@
 
 ### Development
 
-_(Make sure to install [https://nodejs.org/download/](Node.js) and run `npm install`)_
+_(Make sure to install [Node.js](https://nodejs.org) and run `npm install`)_
 
 To start the development server run `grunt development`. This starts a server at [http://localhost:9000](http://localhost:9000). Files in `/lib` are watched and the library is compiled every time you save.
 

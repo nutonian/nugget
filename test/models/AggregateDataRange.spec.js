@@ -26,6 +26,34 @@ function (
             aggregateDataRange.addDataSeries(numericalDataSeries);
         });
 
+        it('should require all data series to be the same type', function() {
+            aggregateDataRange.addDataSeries(numericalDataSeries);
+
+            expect(function() {
+                aggregateDataRange.addDataSeries(new Nugget.OrdinalDataSeries());
+            }).toThrow();
+
+            expect(function() {
+                aggregateDataRange.addDataSeries(new Nugget.NumericalDataSeries());
+            }).not.toThrow();
+        });
+
+        it('should require all data series to have the same types of axes', function() {
+            aggregateDataRange.addDataSeries(numericalDataSeries);
+
+            expect(function() {
+                aggregateDataRange.addDataSeries(new Nugget.NumericalDataSeries([], {
+                    xAxisType: Nugget.Axes.AXIS_TYPES.DATETIME
+                }));
+            }).toThrow();
+
+            expect(function() {
+                aggregateDataRange.addDataSeries(new Nugget.NumericalDataSeries([], {
+                    yAxisType: Nugget.Axes.AXIS_TYPES.ORDINAL
+                }));
+            }).toThrow();
+        });
+
         it('should remove a DataSeries', function(done) {
             aggregateDataRange.addDataSeries(numericalDataSeries);
             expect(aggregateDataRange.size()).toBe(1);
