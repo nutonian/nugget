@@ -4,8 +4,11 @@
 
 _(Make sure to install [Node.js](https://nodejs.org) and run `npm install`)_
 
-To start the development server run `grunt development`. This starts a server at [http://localhost:9000](http://localhost:9000). Files in `/lib` are watched and the library is compiled every time you save.
+To start the development server run `npm start`. This starts a server at http://localhost:9000.
+Files in `/lib` are watched and the library is rebuilt every time you save.
 
-The Jasmine test suite can be found at: [http://localhost:9000/_SpecRunner.html](http://localhost:9000/_SpecRunner.html). **Note:** Do *not* use the Jasmine CLI.
+The Jasmine test suite can be found at http://localhost:9000/_SpecRunner.html. **Note:** Do *not* use the Jasmine CLI.
 
-Some basic examples can be found here: [http://localhost:9000/example/](http://localhost:9000/example/). These load the modules in `/lib` separately instead of the `/release` build for easier debugging. Make sure to turn on "Enable JavaScript source maps" in Chrome dev tools.
+Some basic examples can be found at http://localhost:9000/example/. Make sure to turn on "Enable JavaScript source maps" in Chrome dev tools.
+
+To build a minified version for release, run `npm build:dist`. This outputs a file to `build/Nugget.js`.

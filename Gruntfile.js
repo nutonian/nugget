@@ -12,7 +12,6 @@ module.exports = function(grunt) {
             lib          : 'lib',
             build        : 'build',
             dependencies : 'dependencies',
-            release      : 'release',
             test         : 'test',
             wrappers     : 'wrappers',
             nuggetJS : [
@@ -22,30 +21,7 @@ module.exports = function(grunt) {
             ]
         },
 
-        babel: {
-            options: {
-                sourceMap: true,
-                presets: [
-                    ['es2015', { modules: 'amd' }]
-                ],
-                plugins: [
-                    'add-module-exports'
-                ]
-            },
-            dist: {
-                files: [{
-                    'expand' : true,
-                    'cwd'    : '<%= dirs.lib %>',
-                    'src'    : ['**/*.js'],
-                    'dest'   : '<%= dirs.build %>'
-                }]
-            }
-        },
-
-        clean: {
-            build: ['build'],
-            release: ['release']
-        },
+        clean: ['build', '_SpecRunner.html'],
 
         connect: {
             server: {
@@ -66,7 +42,7 @@ module.exports = function(grunt) {
                     template: require('grunt-template-jasmine-requirejs'),
                     templateOptions: {
                         requireConfig: {
-                            baseUrl: 'build/'
+                            baseUrl: '<%= dirs.build %>/'
                         }
                     }
                 }
@@ -80,38 +56,7 @@ module.exports = function(grunt) {
             }
         },
 
-        requirejs: {
-            compile: {
-                options: {
-                    baseUrl: '.',
-                    name: '<%= dirs.dependencies %>/almond',
-                    include: ['<%= dirs.build %>/Nugget'],
-                    optimize: 'uglify2',
-                    // Mainly using uglify to strip out comments/source maps
-                    uglify2: {
-                        output: {
-                            beautify: true
-                        },
-                        warnings: false,
-                        mangle: false
-                    },
-                    out: '<%= dirs.release %>/Nugget.js',
-                    wrap: {
-                        startFile: 'wrappers/start.frag.js',
-                        endFile: 'wrappers/end.frag.js'
-                    }
-                }
-            }
-        },
-
         watch: {
-            lib: {
-                files: '<%= dirs.lib %>/**/*.js',
-                tasks: ['clean:build', 'babel', 'addPolyfill', 'requirejs'],
-                options: {
-                    atBegin: true
-                }
-            },
             javascript: {
                 files: '<%= dirs.nuggetJS %>',
                 tasks: ['jshint']
@@ -139,16 +84,8 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('addPolyfill', function() {
-        var fs = require('fs');
-        var polyfillPath = './node_modules/babel-polyfill/dist/polyfill.js';
-        var polyfill = '\r' + fs.readFileSync(polyfillPath, {encoding: 'utf8'});
-        fs.appendFileSync('./build/Nugget.js', polyfill, {encoding: 'utf8'});
-    });
-
-    grunt.registerTask('development', ['build', 'tests', 'connect', 'watch']);
+    grunt.registerTask('development', ['tests', 'connect', 'watch']);
     grunt.registerTask('tests',       ['jasmine:dist:build']);
-    grunt.registerTask('build',       ['jshint', 'clean', 'babel', 'addPolyfill', 'requirejs']);
-    grunt.registerTask('default',     ['build']);
+    grunt.registerTask('default',     ['development']);
     grunt.registerTask('sauce_tests', ['connect', 'saucelabs-jasmine']);
 };
