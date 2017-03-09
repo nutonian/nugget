@@ -35,5 +35,33 @@ define([
                 });
 
             });
+
+            describe('splitOnMissingValues', function() {
+                it('splits an array on indices where a member has a null value in a property', function() {
+                    expect(Nugget.Utils.splitOnMissingValues([
+                        { x: 1,    y: 1 },
+                        { x: null, y: 2 },
+                        { x: 3,    y: 3 },
+                        { x: 4,    y: null },
+                        { x: 5,    y: null },
+                        { x: 6,    y: 6 },
+                        { x: 7,    y: 7 },
+                        { x: null, y: 8 }
+                    ], ['x', 'y'])).toEqual([
+                        [ { x: 1, y: 1 } ],
+                        [ { x: 3, y: 3 } ],
+                        [ { x: 6, y: 6 },
+                          { x: 7, y: 7 } ]
+                    ]);
+
+                    expect(Nugget.Utils.splitOnMissingValues([
+                        { x: 1 }, { x: 2 }, { x: 3 }
+                    ], ['x'])).toEqual([
+                        [ { x: 1 }, { x: 2 }, { x: 3 } ]
+                    ]);
+
+                    expect(Nugget.Utils.splitOnMissingValues([], ['x'])).toEqual([]);
+                });
+            });
         });
     });
