@@ -251,5 +251,53 @@ function (
             expect(circleDataChecker.calls.allArgs()).toEqual([[newData[0]], [newData[1]], [newData[2]]]);
             expect(errorBarDataChecker.calls.allArgs()).toEqual([[newData[0]], [newData[1]], [newData[2]]]);
         });
+
+        describe('sparse data series', function() {
+            beforeEach(function() {
+                chart.remove(scatterGraph);
+            });
+
+            it('should only draw points for data values with required keys', function() {
+                dataSeries = new Nugget.SparseNumericalDataSeries([
+                    { x_value: 0, y_value: 0 },
+                    { x_value: 1, y_value: 1 },
+                    { x_value: 2, y_value: null },
+                    { x_value: null, y_value: 3 },
+                    { x_value: 4, y_value: 4 },
+                    { x_value: 5, y_value: null },
+                    { x_value: 6, y_value: null },
+                    { x_value: 7, y_value: 0 },
+                    { x_value: 8, y_value: 0 },
+                    { x_value: 9, y_value: null }
+                ]);
+
+                scatterGraph = new Nugget.ScatterGraph({ dataSeries: dataSeries });
+                chart.add(scatterGraph);
+                chart.update();
+
+                expect($svg.find('circle.point').length).toEqual(5);
+            });
+
+            it('should only render error bars for data values with required', function() {
+                dataSeries = new Nugget.SparseNumericalDataSeries([
+                    { x_value: 0, y_value: 2, y_min: 1, y_max: 5 },
+                    { x_value: 1, y_value: null },
+                    { x_value: null, y_value: 2 },
+                    { x_value: 3, y_value: 3, y_min: null, y_max: 4 },
+                    { x_value: 4, y_value: 4, y_min: 2, y_max: 5 },
+                    { x_value: 5, y_value: 3, y_min: 1, y_max: null, },
+                    { x_value: 6, y_value: 4, y_min: 2 },
+                ]);
+
+                scatterGraph = new Nugget.ScatterGraph({
+                    dataSeries: dataSeries,
+                    showErrorBars: true
+                });
+                chart.add(scatterGraph);
+                chart.update();
+
+                expect($svg.find('.error_bar').length).toEqual(2);
+            });
+        });
     });
 });

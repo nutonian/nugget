@@ -1,0 +1,65 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Nugget</h1>
+    <h4>Sparse Line Graph Example</h4>
+    <button id="update_data" type="button">New data</button>
+    <div class="svg_container" style="height: 400px; width: 600px; margin-top: 20px;">
+        <svg id="line_graph_nugget"></svg>
+    </div>
+    <script>
+        require.config({ baseUrl: '/build' });
+
+        function generateData(length) {
+            var data = Array.apply(null, Array(length)).map(function (_, i) {
+                return {
+                    x_value: (Math.random() > 0.8) ? null : i,
+                    y_value: (Math.random() > 0.65) ? null : Math.floor(Math.random() * 10)
+                };
+            });
+            console.log('-- generated --');
+            data.forEach(function(point) {
+                console.log(point.x_value, point.y_value);
+            });
+            return data;
+        }
+
+        require(['Nugget'], function (Nugget) {
+            var data = generateData(50);
+
+            var dataSeries = new Nugget.SparseNumericalDataSeries(data);
+
+            document.getElementById('update_data').addEventListener('click', function() {
+                dataSeries.setData(generateData(50));
+            });
+
+            var chart = new Nugget.Chart({
+                axisLabels: { x_value: 'x', y_value: 'y' },
+                margins:  { left: 20 },
+                legend: true,
+                resizeHeight: true,
+                resizeWidth: true
+            });
+
+            var line = new Nugget.LineGraph({
+                dataSeries: dataSeries,
+                color: 'green',
+                legendLabel: 'data',
+                showErrorBars: true
+            });
+
+            chart.add(line);
+            chart.addGuide(Nugget.Chart.GuideTypes.YYComparison);
+
+            chart.appendTo('#line_graph_nugget');
+        });
+    </script>
+</body>
+</html>
