@@ -112,6 +112,34 @@ define([
                     chart.add(graph);
                 });
 
+                it('should draw an X guide with a custom format', function(done) {
+                    chart.xGuideLabelFormat = function(d) { return d * 2; };
+                    graph.drawGuides = function(container, chartOpts) {
+                        var data = [{x: mean, y: mean}];
+                        var dataSelection = container.selectAll('.x_guide_container').data(data);
+                        var enterSelection = dataSelection.enter().append('g').attr('class', 'x_guide_container');
+                        graph.drawXLineGuide(dataSelection, enterSelection, chartOpts);
+
+                        Utils.validateGuide($('.x_guide_container'), {
+                            label: {
+                                text: '100',
+                                x: 495, y: 466
+                            },
+                            bg: {
+                                x: 485.5, y: 454.5,
+                                width: 26, height: 15
+                            },
+                            line: {
+                                x1: 495, y1: 225,
+                                x2: 495, y2: 450
+                            }
+                        });
+
+                        done();
+                    };
+                    chart.add(graph);
+                });
+
                 it('should draw a Y guide with a custom yProp', function(done) {
                     graph.drawGuides = function(container, chartOpts) {
                         var data = [{x_value: mean, y_value: mean}];
@@ -144,6 +172,34 @@ define([
                                 y1: 225,
                                 x2: 495,
                                 y2: 225
+                            }
+                        });
+
+                        done();
+                    };
+                    chart.add(graph);
+                });
+
+                it('should draw a Y guide with a custom format', function(done) {
+                    chart.yGuideLabelFormat = function(d) { return d * 2; };
+                    graph.drawGuides = function(container, chartOpts) {
+                        var data = [{x: mean, y: mean}];
+                        var dataSelection = container.selectAll('.y_guide_container').data(data);
+                        var enterSelection = dataSelection.enter().append('g').attr('class', 'y_guide_container');
+                        graph.drawYLineGuide(dataSelection, enterSelection, chartOpts, {});
+
+                        Utils.validateGuide($('.y_guide_container'), {
+                            label: {
+                                text: '100',
+                                x: 93, y: 232
+                            },
+                            bg: {
+                                x: 69.5, y: 220.5,
+                                width: 26, height: 15
+                            },
+                            line: {
+                                x1: 100, y1: 225,
+                                x2: 495, y2: 225
                             }
                         });
 
