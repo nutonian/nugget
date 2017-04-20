@@ -1,0 +1,136 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nugget.js Graphing Library</title>
+    <script src="/dependencies/d3.js"></script>
+    <script src="js/require.min.js"></script>
+    <link type="text/css" href="/css/nugget.css" rel="stylesheet">
+    <link type="text/css" href="example.css" rel="stylesheet">
+    <style>
+        .svg_container {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<h1>Nugget</h1>
+<h4>Scatter plot in Nugget</h4>
+<div class="svg_container">
+    <svg id="container" width="100%" height="100%"></svg>
+</div>
+<script>
+    require.config({
+        baseUrl: '/build'
+    });
+
+    require(['Nugget'], function (Nugget) {
+        var data = [{"x_value":0,"y_value":99.71789619958335},{"x_value":1,"y_value":71.87231539289093},{"x_value":2,"y_value":60.008021022588174},{"x_value":3,"y_value":18.123004209025353},{"x_value":4,"y_value":21.241934363551067},{"x_value":5,"y_value":63.03684138932546},{"x_value":6,"y_value":60.28387636712007},{"x_value":7,"y_value":38.837276438529564},{"x_value":8,"y_value":14.854864469046873},{"x_value":9,"y_value":19.323598040525326},{"x_value":10,"y_value":63.33533113676282},{"x_value":11,"y_value":30.055408236217744},{"x_value":12,"y_value":23.06551411349203},{"x_value":13,"y_value":87.6075871200263},{"x_value":14,"y_value":75.55998730028062},{"x_value":15,"y_value":28.15435647937126},{"x_value":16,"y_value":7.860344907367335},{"x_value":17,"y_value":4.823168967271357},{"x_value":18,"y_value":43.39192453760001},{"x_value":19,"y_value":13.876119323786384},{"x_value":20,"y_value":44.88620470246938},{"x_value":21,"y_value":91.29171799340475},{"x_value":22,"y_value":85.43847140157916},{"x_value":23,"y_value":57.01472259857405},{"x_value":24,"y_value":99.06928286632287},{"x_value":25,"y_value":43.04485294489269},{"x_value":26,"y_value":6.174008564150114},{"x_value":27,"y_value":75.75134799470703},{"x_value":28,"y_value":43.944523039756355},{"x_value":29,"y_value":53.857151047117455},{"x_value":30,"y_value":56.42905759021512},{"x_value":31,"y_value":66.67311305479532},{"x_value":32,"y_value":64.53016414765989},{"x_value":33,"y_value":58.61832682933865},{"x_value":34,"y_value":80.3082366169611},{"x_value":35,"y_value":2.3479321348231394},{"x_value":36,"y_value":3.29274328073285},{"x_value":37,"y_value":79.72536487134904},{"x_value":38,"y_value":77.157784282275},{"x_value":39,"y_value":21.738639244606816},{"x_value":40,"y_value":22.05516880495611},{"x_value":41,"y_value":39.78617823578461},{"x_value":42,"y_value":89.60184130964439},{"x_value":43,"y_value":22.34525956983464},{"x_value":44,"y_value":49.03773416327659},{"x_value":45,"y_value":81.91172415832372},{"x_value":46,"y_value":58.155563405620114},{"x_value":47,"y_value":96.99579408398868},{"x_value":48,"y_value":86.63158396645186},{"x_value":49,"y_value":98.55729467095502},{"x_value":50,"y_value":75.03643801062162},{"x_value":51,"y_value":20.83485225263051},{"x_value":52,"y_value":6.393903191090459},{"x_value":53,"y_value":48.99650069449375},{"x_value":54,"y_value":39.39514111525841},{"x_value":55,"y_value":64.690187282168},{"x_value":56,"y_value":58.59653110701317},{"x_value":57,"y_value":21.59770945711921},{"x_value":58,"y_value":83.39684075175626},{"x_value":59,"y_value":10.35503776435813},{"x_value":60,"y_value":6.171253597510827},{"x_value":61,"y_value":24.10639028595007},{"x_value":62,"y_value":43.68882494523587},{"x_value":63,"y_value":33.70266992870316},{"x_value":64,"y_value":30.571406139367753},{"x_value":65,"y_value":13.284165743401815},{"x_value":66,"y_value":32.46598844446498},{"x_value":67,"y_value":73.08875152032115},{"x_value":68,"y_value":7.299422271494208},{"x_value":69,"y_value":13.96916938704527},{"x_value":70,"y_value":49.51672040711663},{"x_value":71,"y_value":83.570939693262},{"x_value":72,"y_value":93.56836773620658},{"x_value":73,"y_value":43.90611076161635},{"x_value":74,"y_value":16.32152001051685},{"x_value":75,"y_value":46.91615398418032},{"x_value":76,"y_value":23.94747664566941},{"x_value":77,"y_value":8.512284743617471},{"x_value":78,"y_value":1.744950724329783},{"x_value":79,"y_value":33.69063626864954},{"x_value":80,"y_value":75.34107346305375},{"x_value":81,"y_value":97.39436436545131},{"x_value":82,"y_value":28.80776008815485},{"x_value":83,"y_value":88.9841733302176},{"x_value":84,"y_value":93.15154799168069},{"x_value":85,"y_value":30.53280371899858},{"x_value":86,"y_value":64.8904588587021},{"x_value":87,"y_value":29.11162177609124},{"x_value":88,"y_value":41.012475304973165},{"x_value":89,"y_value":63.42325800052686},{"x_value":90,"y_value":24.242770516479965},{"x_value":91,"y_value":19.689708338011428},{"x_value":92,"y_value":2.7078397627128226},{"x_value":93,"y_value":62.60723071041585},{"x_value":94,"y_value":50.87827261968854},{"x_value":95,"y_value":11.680457592517726},{"x_value":96,"y_value":82.95297309013594},{"x_value":97,"y_value":94.1903462733521},{"x_value":98,"y_value":33.20630999830891},{"x_value":99,"y_value":41.474664802826226}];
+
+
+        var NUM_SAMPLES = 50;
+
+        //
+        // Endpoint should have query params:
+        //    * num_samples
+        //    * x_min
+        //    * x_max
+        //    * y_min?
+        //    * y_max?
+        //
+
+        var firstPoint = data[0];
+        var lastPoint = data[ data.length - 1 ];
+
+        function getSamples(xDomain) {
+            var numDataPoints = data.length;
+
+            var dataStartIdx = 0;
+            var dataEndIdx = numDataPoints - 1;
+
+            var samples = [];
+
+            if (xDomain) {
+                var xMin = xDomain[0];
+                var xMax = xDomain[1];
+
+                for (var i = 0; i < numDataPoints; i++) {
+                    var val = data[i].x_value;
+                    if (val <= xMin) {
+                        dataStartIdx = i;
+                    }
+                    if (val > xMax) {
+                        dataEndIdx = i - 1;
+                        break;
+                    }
+                }
+
+                numDataPoints = dataEndIdx - dataStartIdx;
+            }
+
+            var sampleInterval = Math.ceil(numDataPoints / NUM_SAMPLES);
+
+            console.log({dataStartIdx, NUM_SAMPLES, sampleInterval, numDataPoints});
+
+            for (var i = 0; i < NUM_SAMPLES; i++) {
+                var dataIdx = sampleInterval * i + dataStartIdx;
+                if (dataIdx > data.length - 1) {
+                    break;
+                }
+
+                samples.push(data[dataIdx]);
+            }
+
+            return samples;
+        }
+
+        var chart = new Nugget.Chart({
+            axisLabels: {
+                x: 'foo',
+                y: 'bar'
+            },
+
+            guides: true,
+
+            onZoomStart: function(zoom) {
+                // show spinner
+            },
+
+            onZoomEnd: function(zoom) {
+                var samples = getSamples(zoom.x().domain());
+                dataSeries.setData(samples);
+            },
+
+            onZoomReset: function() {
+                var samples = getSamples();
+                dataSeries.setData(samples);
+            }
+        });
+
+        var dataSeries = new Nugget.NumericalDataSeries();
+        window.setData = function(vals) {
+            dataSeries.setData(vals);
+        };
+
+
+        var lineGraph = new Nugget.LineGraph({
+            color: '#09f',
+            dataSeries: dataSeries,
+            shouldAnimate: true
+        });
+        chart.add(lineGraph);
+
+        var scatterGraph = new Nugget.ScatterGraph({
+            color: '#009',
+            dataSeries: dataSeries,
+            shouldAnimate: true
+        });
+        chart.add(scatterGraph);
+
+        dataSeries.setData(getSamples());
+
+        chart.appendTo('#container');
+    });
+</script>
+</body>
+</html>
