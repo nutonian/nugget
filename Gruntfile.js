@@ -127,12 +127,12 @@ module.exports = function(grunt) {
                     build        : process.env.BUILD_NUMBER,
                     browsers     : [{
                         browserName: "chrome",
-                        platform: "OS X 10.8"
+                        platform: "macOS 10.12"
                     }],
                     testname     : "Nugget tests",
                     tags         : ["master"],
                     sauceConfig: {
-                        "screenResolution": "1920x1200"
+                        "screenResolution": "1920x1440"
                     }
                 }
             }
