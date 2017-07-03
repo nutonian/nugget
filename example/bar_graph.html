@@ -32,10 +32,7 @@
     <svg id="bar_graph_grouped"></svg>
 </div>
 <script>
-    require.config({
-        // Development
-        baseUrl: '/build'
-    });
+    require.config({ baseUrl: '/build' });
 
     require(['Nugget'], function (Nugget) {
         var data = [{x_value: 'A', y: 2}, {x_value: 'B', y: 15}, {x_value: 'C', y: 8}, {x_value: 'D', y: 6}, {x_value: 'E', y: 20}, {x_value: 'F', y: 16}];

@@ -14,16 +14,8 @@
         <svg id="area_graph_nugget"></svg>
     </div>
     <script>
-        require.config({
-            // Development
-            baseUrl: '/build'
+        require.config({ baseUrl: '/build' });
 
-            // Production
-            // baseUrl: '/release/'
-        });
-    </script>
-
-    <script>
         require(['Nugget'], function (Nugget) {
             var areaGraphData1 = [
                 { x_value: 0,  y_min: 10,  y_max: 20  },
@@ -31,7 +23,7 @@
                 { x_value: 10,  y_min: 50, y_max: 65 },
                 { x_value: 15,  y_min: 70, y_max: 85 },
             ];
-            var dataSeries1 = new Nugget.YRangeDataSeries(areaGraphData1);
+            var dataSeries1 = new Nugget.NumericalDataSeries(areaGraphData1);
 
             var chart = new Nugget.Chart({
                 axisLabels: {

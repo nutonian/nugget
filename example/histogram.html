@@ -43,13 +43,8 @@
     <svg id="histogram_nugget"></svg>
 </div>
 <script>
-    require.config({
-        // Development
-        baseUrl: '/build'
+    require.config({ baseUrl: '/build' });
 
-        // Production
-        // baseUrl: '/release/'
-    });
     require(['Nugget'], function (Nugget) {
         var data = [
             {x_min: 1, x_max: 3, y_value: 20},

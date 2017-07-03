@@ -20,13 +20,7 @@
     <svg id="box_plot_nugget"></svg>
 </div>
 <script>
-    require.config({
-        // Development
-        baseUrl: '/build'
-
-        // Production
-        // baseUrl: '/release/'
-    });
+    require.config({ baseUrl: '/build' });
 
     require(['Nugget'], function (Nugget) {
         var data = [

@@ -1,6 +1,5 @@
 .DS_STORE
 node_modules
 build/
-release/
 _SpecRunner.html
 .grunt
